@@ -18,6 +18,10 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.MEDIUM,
     color: COLORS.GREY,
   },
+
+  
+
+
 });
 
 export default styles;

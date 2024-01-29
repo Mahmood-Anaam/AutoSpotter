@@ -9,7 +9,7 @@ import { useStore } from "../../store/store";
 const HomePopularParking = ({ navigation }) => {
 
 
-  const PopularParkingData = useStore((state) => state.PopularParking);
+  const ParkingData = useStore((state) => state.Parking);
   const addToSavedParkingIDS = useStore((state) => state.addToSavedParkingIDS);
   const deleteFromSavedParkingIDS = useStore((state) => state.deleteFromSavedParkingIDS);
   const getGatesByParkingId = useStore((state) => state.getGatesByParkingId);
@@ -22,18 +22,19 @@ const HomePopularParking = ({ navigation }) => {
     <FlatList
       horizontal
       showsHorizontalScrollIndicator={false}
-      data={PopularParkingData}
+      data={ParkingData}
       contentContainerStyle={styles.flatListContainer}
       keyExtractor={(item) => item.id}
       ListEmptyComponent={
         <View style={styles.emptyListContainer}>
-          <Text style={styles.emptyListText}>No Parking Places Available</Text>
+         <Text style={styles.emptyListText}>No Parking Places Available</Text>
         </View>
+
       }
       renderItem={({ item }) => {
         const {
           id,
-          title,
+          name,
           imageUrl,
           currency,
           cost,
@@ -46,12 +47,12 @@ const HomePopularParking = ({ navigation }) => {
           <Pressable
             onPress={() => {
               const gates = getGatesByParkingId(id);
-              navigation.push(SCREENS.CHOOSE_GATE_SCREEN, {gates});
+              navigation.push(SCREENS.CHOOSE_GATE_SCREEN, { gates });
             }}
           >
             <HomePopularCard
               id={id}
-              title={title}
+              name={name}
               imageUrl={imageUrl}
               currency={currency}
               cost={cost}

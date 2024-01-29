@@ -5,12 +5,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
-
 export const useStore = create(
   persist(
     (set, get) => ({
 
-      PopularParking: [],
+      Parking: [],
       SavedParking: [],
       SavedParkingIDS: [],
       GatesParking:[],
@@ -20,8 +19,16 @@ export const useStore = create(
 
 
 
-      setPopularParking: (docs) => {
-        return set({ PopularParking: docs });
+      setParking: (docs) => {
+        const data = docs.map((doc)=>{
+          return {
+            ...doc,
+            saved:  get().SavedParkingIDS.filter(element => element === doc.id).length > 0,
+            currency: "SAR "
+          }
+        });
+        
+        return set({ Parking: data });
       },
 
 
@@ -69,11 +76,11 @@ export const useStore = create(
           produce((state) => {
 
 
-            for (let i = 0; i < state.PopularParking.length; i++) {
-              if (state.PopularParking[i].id == id) {
-                state.PopularParking[i].saved = true;
+            for (let i = 0; i < state.Parking.length; i++) {
+              if (state.Parking[i].id == id) {
+                state.Parking[i].saved = true;
                 
-                state.SavedParking = [...state.SavedParking, state.PopularParking[i]];
+                state.SavedParking = [...state.SavedParking, state.Parking[i]];
                 state.SavedParkingIDS = [...state.SavedParkingIDS, id];
                 break;
               }
@@ -94,9 +101,9 @@ export const useStore = create(
             state.SavedParkingIDS.splice(index, 1);
             state.SavedParking.splice(index, 1);
 
-            for (let i = 0; i < state.PopularParking.length; i++) {
-              if (state.PopularParking[i].id == id) {
-                state.PopularParking[i].saved = false;
+            for (let i = 0; i < state.Parking.length; i++) {
+              if (state.Parking[i].id == id) {
+                state.Parking[i].saved = false;
                 break;
               }
             }

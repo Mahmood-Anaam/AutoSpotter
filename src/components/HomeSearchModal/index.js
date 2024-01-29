@@ -9,17 +9,20 @@ import {
 } from "react-native";
 import { filter } from "lodash";
 import styles from "./styles";
-import { parkingData } from "../../utilities/data";
 import { COLORS } from "../../utilities/colors";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
 import { ParkingSVG } from "../SVG/SVG";
 import { SCREENS } from "../../utilities/constants";
+import { useStore } from "../../store/store";
 
 const HomeSearchModal = (props) => {
   const { closeModalHandler, navigation } = props;
-  const [data, setData] = useState([...parkingData]);
+  const parkingData = useStore((state) => state.Parking);
+  const [data, setData] = useState(parkingData);
   const textInput = useRef(0);
+
+
 
   const contains = ({ name }, query) => {
     if (name.toLowerCase().includes(query.toLowerCase())) {
@@ -50,7 +53,7 @@ const HomeSearchModal = (props) => {
           style={styles.input}
           placeholder="Search for Parking..."
           placeholderTextColor={COLORS.GREY}
-          autoFocus={false}
+          autoFocus={true}
           ref={textInput}
           cursorColor={COLORS.PRIMARY}
           onChangeText={handleSearch}
@@ -73,7 +76,7 @@ const HomeSearchModal = (props) => {
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
-          const { name, cost, address, distance } = item;
+          const { name, address, cost, currency, estimatedTime } = item;
           return (
             <Pressable
               style={styles.parkingItem}
@@ -90,9 +93,9 @@ const HomeSearchModal = (props) => {
               </View>
 
               <View style={styles.parkingDistance}>
-                <Text style={styles.parkingName}>{distance}km</Text>
+                <Text style={styles.parkingName}>{estimatedTime}min</Text>
                 <Text style={styles.parkingCost}>
-                  ${cost} <Text style={styles.parkingAddress}>/hour</Text>
+                  {currency}{cost} <Text style={styles.parkingAddress}>/hour</Text>
                 </Text>
               </View>
             </Pressable>

@@ -10,7 +10,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 const HomePopularCard = (props) => {
   const {
     id,
-    title,
+    name,
     imageUrl,
     ToggleSaved,
     currency,
@@ -28,7 +28,7 @@ const HomePopularCard = (props) => {
         <Card.Cover source={{ uri: imageUrl }} style={styles.cardImage} />
 
         <View style={styles.cardTitleWrapper}>
-          <Text style={styles.cardTitle}>{title}</Text>
+          <Text style={styles.cardTitle}>{name}</Text>
 
           <View style={styles.cardDetailsContainer}>
             <MaterialCommunityIcons

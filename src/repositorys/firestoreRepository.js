@@ -1,33 +1,32 @@
-import Toast from "react-native-simple-toast";
+
 import { db } from "./firebaseConfig";
 import { collection, orderBy, query, getDocs } from "firebase/firestore";
-
-import { useStore } from "../store/store";
 import { COLLECTIONS_REFS } from "../utilities/constants";
 
 
 
-export const getParking = async () => {
+export const loadParking = async () => {
 
-    const SavedParkingIDS = useStore((state) => state.SavedParkingIDS);
+    let parking=[];
+    let error = "";
+
     try {
-
+        console.log("Start getting parking data from firebase");
         const q = query(collection(db, COLLECTIONS_REFS.PARKING), orderBy('date', 'asc'));
         const querySnapshot = await getDocs(q);
-        let parking = querySnapshot.docs.map((doc) => {
+        parking = querySnapshot.docs.map((doc) => {
             return {
                 ...doc.data(),
                 id: doc.id,
-                saved: SavedParkingIDS.filter(element => element === doc.id).length > 0,
-                currency: "SAR "
             };
         });
 
-        return parking;
+        return {parking,error};
 
-    } catch (error) {
-        Toast.show("Error getting parking data from firebase: (" + error + ")", Toast.CENTER);
-        return [];
+    } catch (e) {
+        error = e;
+        console.log("Error getting parking data from firebasexxxx: ("+error+")");
+        return {parking,error};
     }
 
 
@@ -53,7 +52,7 @@ export const getGates = async () => {
         return gates;
 
     } catch (error) {
-        Toast.show("Error getting gates data from firebase: (" + error + ")", Toast.CENTER);
+        console.log("Error getting gates data from firebase: (" + error + ")");
         return [];
     }
 
@@ -81,7 +80,7 @@ export const getFloors = async () => {
         return floors;
 
     } catch (error) {
-        Toast.show("Error getting floors data from firebase: (" + error + ")", Toast.CENTER);
+        console.log("Error getting floors data from firebase: (" + error + ")");
         return [];
     }
 
@@ -108,7 +107,7 @@ export const getSpots = async () => {
         return spots;
 
     } catch (error) {
-        Toast.show("Error getting spots data from firebase: (" + error + ")", Toast.CENTER);
+        console.log("Error getting spots data from firebase: (" + error + ")");
         return [];
     }
 

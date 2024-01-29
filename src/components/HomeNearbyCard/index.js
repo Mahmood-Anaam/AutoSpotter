@@ -10,7 +10,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 const HomeNearbyCard = (props) => {
   const {
     id,
-    title,
+    name,
     imageUrl,
     ToggleSaved,
     currency,
@@ -44,7 +44,7 @@ const HomeNearbyCard = (props) => {
 
         <View style={styles.cardDetailsWrapper}>
           <Text style={styles.cardTitle} numberOfLines={2}>
-            {title}
+            {name}
           </Text>
 
           <View style={styles.cardDetails}>

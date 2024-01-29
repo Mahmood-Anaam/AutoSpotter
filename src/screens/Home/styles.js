@@ -51,6 +51,15 @@ const styles = StyleSheet.create({
     padding: SPACING.s8,
     borderRadius: SPACING.s20,
   },
+
+
+  lottieStyle: {
+    
+    height: VSPACING.s60*5,
+    alignSelf: "center",
+  },
+
+
 });
 
 export default styles;

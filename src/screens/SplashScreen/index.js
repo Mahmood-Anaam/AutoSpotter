@@ -7,8 +7,9 @@ import { FIRST_LAUNCH, SCREENS } from "../../utilities/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAuth } from "firebase/auth";
 
-const SplashScreen = ({ navigation }) => {
 
+const SplashScreen = ({ navigation }) => {
+  
   const checkfirstLaunch = async () => {
 
     const firstLaunch = await AsyncStorage.getItem(FIRST_LAUNCH);
@@ -20,6 +21,7 @@ const SplashScreen = ({ navigation }) => {
     else {
 
       if (getAuth().currentUser) {
+        
         navigation.replace(SCREENS.BOTTOM_NAVIGATOR);
       }
       else {
