@@ -21,7 +21,7 @@ const HomeSearchModal = (props) => {
   const parkingData = useStore((state) => state.Parking);
   const [data, setData] = useState(parkingData);
   const textInput = useRef(0);
-
+  const getGatesByParkingId = useStore((state) => state.getGatesByParkingId);
 
 
   const contains = ({ name }, query) => {
@@ -82,7 +82,8 @@ const HomeSearchModal = (props) => {
               style={styles.parkingItem}
               onPress={() => {
                 closeModalHandler();
-                navigation.push(SCREENS.CHOOSE_GATE_SCREEN, { item });
+                const gates = getGatesByParkingId(item.id);
+                navigation.push(SCREENS.CHOOSE_GATE_SCREEN, { gates });
               }}
             >
               <ParkingSVG />
