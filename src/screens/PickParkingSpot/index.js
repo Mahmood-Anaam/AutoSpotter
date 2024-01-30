@@ -21,7 +21,7 @@ const PickParkingSpotScreen = (props) => {
 
   const navigation = useNavigation();
   const { floors } = props.route.params;
-  const addBookingInfo = useStore((state) => state.addBookingInfo);
+ 
   const [checkedFloor, setCheckedFloor] = React.useState(floors[0]);
   const [checkedSpot, setCheckedSpot] = React.useState("");
 
@@ -35,7 +35,7 @@ const PickParkingSpotScreen = (props) => {
       Toast.show("Pls select a spot.", Toast.LONG);
     } else {
 
-      addBookingInfo({floorId:checkedFloor.id,spotId:checkedSpot.id});
+      
       navigation.navigate(SCREENS.PARKING_BOOKING_DETAIL_SCREEN);
     }
   };

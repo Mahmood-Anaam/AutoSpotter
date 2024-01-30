@@ -8,13 +8,16 @@ import { SCREENS } from "../../utilities/constants";
 import { getApp } from "firebase/app";
 import { getAuth, signInWithPhoneNumber } from "firebase/auth";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import Toast from "react-native-simple-toast";
 
 const SignUpScreen = ({ navigation }) => {
+
+
   const [fullName, setfullName] = useState("Mahmood Anaam");
-  const [phoneNumber, setphoneNumber] = useState("+967 781 858 711");
+  const [phoneNumber, setphoneNumber] = useState("+967 737 265 380");
 
 
-  const [confirmationResult, setConfirmationResult] = useState(null);
+
   const recaptchaVerifier = useRef(null);
 
 
@@ -25,7 +28,7 @@ const SignUpScreen = ({ navigation }) => {
       phoneNumber,
       recaptchaVerifier.current
     );
-    setConfirmationResult(result);
+    return result;
   };
 
 
@@ -35,17 +38,18 @@ const SignUpScreen = ({ navigation }) => {
     <View style={styles.container}>
       <AuthUpperText title="Create Your" coloredTitle="Account" />
 
-      <AppTextInput placeholder="Full Name" 
-      value={fullName} fullName 
-      onChangeText={(text) => { setfullName(text) }}
+      <AppTextInput placeholder="Full Name"
+        value={fullName}
+        fullName
+        onChangeText={(text) => { setfullName(text) }}
       />
 
       <AppTextInput placeholder="Phone Number"
-       value={phoneNumber} 
-       keyboardType={'phone-pad'}
-       onChangeText={(text) => { setphoneNumber(text) }}
-       
-       />
+        value={phoneNumber}
+        keyboardType={'phone-pad'}
+        onChangeText={(text) => { setphoneNumber(text) }}
+
+      />
 
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
@@ -55,7 +59,7 @@ const SignUpScreen = ({ navigation }) => {
       <AppButton
         title="Sign Up"
         onPress={async () => {
-          await loginWithPhoneNumber(phoneNumber);
+          const confirmationResult = await loginWithPhoneNumber(phoneNumber);
           if (confirmationResult != null) {
             navigation.navigate(SCREENS.OTP_CODE_SCREEN,
               {
@@ -66,7 +70,8 @@ const SignUpScreen = ({ navigation }) => {
             );
           }
           else {
-            alert("Verification Failed.Please try again.");
+
+            Toast.show("Verification Failed.Please try again.", Toast.CENTER);
           }
         }}
       />

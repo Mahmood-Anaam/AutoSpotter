@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, Text, TextInput, View } from "react-native";
 import styles from "./styles";
-import { getCurrentTime, logger } from "../../utilities/HelperFunctions";
+import { getCurrentTime,formatDate, logger } from "../../utilities/HelperFunctions";
 import { useNavigation } from "@react-navigation/native";
 import AppBar from "../../components/AppBar";
 import { Calendar } from "react-native-calendars";
@@ -14,13 +14,15 @@ import Toast from "react-native-simple-toast";
 import { SCREENS } from "../../utilities/constants";
 import { useStore } from "../../store/store";
 
+
+
+
 const ParkingBookingDetailsScreen = () => {
 
-  const deleteBookingInfo = useStore((state) => state.deleteBookingInfo);
-  const addBookingInfo = useStore((state) => state.addBookingInfo);
-
+  const setBookingInfo = useStore((state) => state.setBookingInfo);
   const navigation = useNavigation();
-  
+
+  const [selectedDay, setSelectedDay] = useState((new Date()).dateString);
 
   const [selected, setSelected] = useState("");
   const [duration, setDuration] = useState(1);
@@ -46,6 +48,11 @@ const ParkingBookingDetailsScreen = () => {
     setStartTime("00:00");
     setEndTime("00:00");
     logger(day);
+    const x = new Date();
+    logger(String.fromCodePoint())
+
+
+
   };
 
   const onButtonPress = () => {
@@ -87,7 +94,6 @@ const ParkingBookingDetailsScreen = () => {
         title="Book Parking Details"
         leftIcon
         onLeftIconPress={() => {
-          deleteBookingInfo();
           navigation.goBack();
         }}
         containerStyle={styles.containerStyle}
@@ -95,14 +101,15 @@ const ParkingBookingDetailsScreen = () => {
 
       <Text style={styles.titleText}>Select Date</Text>
 
+
       <Calendar
         style={styles.calendar}
         onDayPress={handleDayPress}
         theme={{
           calendarBackground: COLORS.LIGHT_BLUE_WHITE,
         }}
-        hideExtraDays
-        enableSwipeMonths
+        minDate={(new Date()).toString()}
+        allowSelectionOutOfRange={false}
         markedDates={{
           [selected]: {
             selected: true,

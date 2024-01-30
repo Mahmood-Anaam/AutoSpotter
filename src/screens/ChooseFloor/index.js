@@ -13,42 +13,45 @@ import { ASSETS } from "../../utilities/assets";
 
 
 
-const ChooseGateScreen = (props) => {
+const ChooseFloorScreen = (props) => {
 
-  const { gates } = props.route.params;
+  const { floors } = props.route.params;
   const navigation = useNavigation();
 
-  if (gates.length == 0) {
+  if (floors.length == 0) {
     return (
       <View style={styles.container}>
         <AppBar
-          title="Choose Gate"
+          title="Choose Floor"
           leftIcon
           onLeftIconPress={() => {
             navigation.goBack();
           }}
           containerStyle={styles.containerStyle}
         />
-          <Text style={styles.emptyListText}>No gates have been added to this parking yet.</Text>
+          <Text style={styles.emptyListText}>No floors have been added to this gate yet.</Text>
       </View>
     );
   }
 
 
 
-  const [isChecked, setIsChecked] = useState(gates[0].id);
-  const getFloorsBYGateId = useStore((state) => state.getFloorsBYGateId);
+  const [isChecked, setIsChecked] = useState(floors[0].id);
+  const setBookingInfo = useStore((state) => state.setBookingInfo);
+  
+
 
   const handleOnPress = () => {
-    const floors = getFloorsBYGateId(isChecked);
+    const floorId = isChecked;
+    setBookingInfo({floorId});
     // navigation.navigate(SCREENS.PICK_PARKING_SPOT_SCREEN, { floors });
-    navigation.navigate(SCREENS.CHOOSE_FLOOR_SCREEN, { floors });
+    navigation.navigate(SCREENS.PARKING_BOOKING_DETAIL_SCREEN);
   };
 
   return (
     <View style={styles.container}>
       <AppBar
-        title="Choose Gate"
+        title="Choose Floor"
         leftIcon
         onLeftIconPress={() => {
           navigation.goBack();
@@ -57,7 +60,7 @@ const ChooseGateScreen = (props) => {
       />
 
       <FlatList
-        data={gates}
+        data={floors}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
           return (
@@ -68,7 +71,7 @@ const ChooseGateScreen = (props) => {
                 isChecked === item.id && styles.gateContainerChecked,
               ]}
             >
-              <Image source={ASSETS.GateImg} style={styles.image} />
+              <Image source={ASSETS.FloorImg} style={styles.image} />
               <Text style={styles.title}>{item.name}</Text>
               <RadioButton
                 value={item.id}
@@ -89,4 +92,4 @@ const ChooseGateScreen = (props) => {
   );
 };
 
-export default ChooseGateScreen;
+export default ChooseFloorScreen;

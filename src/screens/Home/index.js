@@ -13,7 +13,7 @@ import HomePopularParking from "../../components/HomePopularParkingList";
 import HomeNearbyParkingList from "../../components/HomeNearbyParkingList";
 import HomeAppBar from "../../components/HomeAppBar";
 import HomeSearchModal from "../../components/HomeSearchModal";
-import { loadParking } from "../../repositorys/firestoreRepository";
+import { loadParking, loadGates,loadFloors } from "../../repositorys/firestoreRepository";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Toast from "react-native-simple-toast";
 import { useStore } from "../../store/store";
@@ -25,7 +25,11 @@ const HomeScreen = ({ navigation }) => {
 
   const [modalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFetching, setIsFetching] = useState(true);
+
   const setParking = useStore((state) => state.setParking);
+  const setGates = useStore((state) => state.setGates);
+  const setFloors = useStore((state) => state.setFloors);
 
   const openModalHandler = () => {
     setIsModalVisible(true);
@@ -35,31 +39,74 @@ const HomeScreen = ({ navigation }) => {
     setIsModalVisible(false);
   };
 
+  const onRefreshHandler = () => {
+    setIsLoading(true);
+    setIsFetching(!isFetching);
+  };
 
   useEffect(() => {
 
-    loadParking().then(respons => {
-      const { parking, error } = respons;
-      if (error === "") {
-        setParking(parking);
-        console.log("sucess getting parking data from firebase:")
-      } else {
-        console.log("Error getting parking data from firebase: (" + error + ")")
-        Toast.show("Error getting parking data from firebase: (" + error + ")", Toast.CENTER);
+    async function fetch() {
 
-      }
-    });
+      await loadParking().then(respons => {
+        const { parking, error } = respons;
+        if (error === "") {
+          setParking(parking);
+          console.log("sucess getting parking data from firebase:")
+        } else {
+          console.log("Error getting parking data from firebase: (" + error + ")")
+          Toast.show("Error getting parking data from firebase: (" + error + ")", Toast.CENTER);
 
-    setIsLoading(false);
+        }
+      });
 
-  }, [isLoading]);
+
+      await loadGates().then(respons => {
+        const { gates, error } = respons;
+        if (error === "") {
+          setGates(gates);
+          console.log("sucess getting gates data from firebase:")
+        } else {
+          console.log("Error getting gates data from firebase: (" + error + ")")
+          Toast.show("Error getting gates data from firebase: (" + error + ")", Toast.CENTER);
+
+        }
+      });
+
+
+      await loadFloors().then(respons => {
+        const { floors, error } = respons;
+        if (error === "") {
+          setFloors(floors);
+          console.log("sucess getting floors data from firebase:")
+        } else {
+          console.log("Error getting floors data from firebase: (" + error + ")")
+          Toast.show("Error getting floors data from firebase: (" + error + ")", Toast.CENTER);
+
+        }
+      });
+
+
+
+
+
+
+
+
+
+      setIsLoading(false);
+    }
+
+    fetch();
+  }, [isFetching]);
+
 
 
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={COLORS.PRIMARY} />
 
-      <HomeAppBar openSearchModal={openModalHandler} />
+      <HomeAppBar openSearchModal={openModalHandler} onRefresh={onRefreshHandler} />
 
 
       {!isLoading && (
@@ -68,18 +115,16 @@ const HomeScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollViewContainer}
         >
-          <HomeCategoryDivider title="Popular Parking" onPress={() => {
-            setIsLoading(true);
-            console.log("onPress See All Popular Parking");
-          }} />
+          <HomeCategoryDivider
+            title="Popular Parking"
+            onPress={() => { }}
+          />
 
           <HomePopularParking navigation={navigation} />
+          
           <HomeCategoryDivider
             title="Nearby Parking"
-            onPress={() => {
-              setIsLoading(true);
-              console.log("onPress See All Nearby Parking");
-            }}
+            onPress={() => { }}
           />
           <HomeNearbyParkingList navigation={navigation} />
 
@@ -88,12 +133,15 @@ const HomeScreen = ({ navigation }) => {
       )}
 
       {isLoading && (
+
         <LottieView
+          CENTER={true}
           source={ASSETS.loading}
           style={styles.lottieStyle}
           autoPlay
           loop
         />
+
       )}
 
       {modalVisible && (
@@ -115,12 +163,7 @@ const HomeCategoryDivider = (props) => {
     <View style={styles.parkingTitleView}>
       <Text style={styles.parkingTitle}>{title}</Text>
       <Pressable onPress={onPress}>
-        <MaterialCommunityIcons
-          name="refresh"
-          size={25}
-          color={COLORS.PRIMARY}
-        />
-
+        <Text style={styles.seeAllText}> {"See All"}</Text>
       </Pressable>
     </View>
   );

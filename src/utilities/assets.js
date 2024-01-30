@@ -9,6 +9,7 @@ export const ASSETS = {
   OtpCodeImg: require("../../assets/images/OtpCodeImg.png"),
   EllipseImg: require("../../assets/images/Ellipse.png"),
   GateImg: require("../../assets/images/gate.png"),
+  FloorImg: require("../../assets/images/gate.png"),
   SpotCarImg: require("../../assets/images/spot_car.png"),
   noBookmarks: require("../../assets/lottie/no_bookmaeks.json"),
   ParkingImg: "https://www.alpinme.com/files/parksmart.png",

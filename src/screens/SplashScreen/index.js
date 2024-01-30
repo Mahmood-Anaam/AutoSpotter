@@ -9,7 +9,7 @@ import { getAuth } from "firebase/auth";
 
 
 const SplashScreen = ({ navigation }) => {
-  
+
   const checkfirstLaunch = async () => {
 
     const firstLaunch = await AsyncStorage.getItem(FIRST_LAUNCH);

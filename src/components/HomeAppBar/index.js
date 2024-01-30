@@ -7,9 +7,10 @@ import { FilledArrowDownSVG, GroupSVG } from "../SVG/SVG";
 import { Badge } from "react-native-paper";
 import { COLORS } from "../../utilities/colors";
 import styles from "./styles";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const HomeAppBar = (props) => {
-  const { city, country, openSearchModal } = props;
+  const { city, country, openSearchModal,onRefresh } = props;
   return (
     <View style={styles.appbarContainer}>
       <Text style={styles.locationText}>Location</Text>
@@ -38,12 +39,14 @@ const HomeAppBar = (props) => {
         </View>
 
         <Pressable
-          onPress={() => {
-            console.log("Pressed");
-          }}
+          onPress={onRefresh}
           style={styles.groupContainer}
         >
-          <GroupSVG size={24} color={COLORS.PRIMARY} />
+          <MaterialCommunityIcons
+            name="refresh"
+            size={25}
+            color={COLORS.PRIMARY}
+          />
         </Pressable>
       </Pressable>
     </View>

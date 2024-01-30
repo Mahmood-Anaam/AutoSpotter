@@ -12,7 +12,7 @@ export const useStore = create(
       Parking: [],
       SavedParking: [],
       SavedParkingIDS: [],
-      GatesParking:[],
+      Gates:[],
       Floors: [],
       BookingInfo:{},
       FavoritesList: [],
@@ -37,13 +37,13 @@ export const useStore = create(
       },
 
       
-      setGatesParking: (docs) => {
-        return set({ GatesParking: docs });
+      setGates: (docs) => {
+        return set({ Gates: docs });
       },
 
 
       getGatesByParkingId:(parkingId)=>{
-        const gates = get().GatesParking.filter((gate) => gate.parkingId === parkingId);
+        const gates = get().Gates.filter((gate) => gate.parkingId === parkingId);
         return gates;
 
       },
@@ -56,6 +56,10 @@ export const useStore = create(
       getFloorsBYGateId:(gateId)=>{
         const floors = get().Floors.filter((floor) => floor.gateId === gateId);
         return floors;
+      },
+
+      setBookingInfo: (info) => {
+        return set({ BookingInfo: info });
       },
 
 

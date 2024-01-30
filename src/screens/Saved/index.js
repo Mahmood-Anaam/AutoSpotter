@@ -48,7 +48,7 @@ const SavedScreen = () => {
   };
 
   const filteredList = SavedParking.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -84,12 +84,12 @@ const SavedScreen = () => {
             nestedScrollEnabled={true}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => {
-              const { id, title, address, imageUrl, saved, type } = item;
+              const { id, name, address, imageUrl, saved, type } = item;
               return (
                 <View style={styles.cardContainer}>
                   <Image source={{ uri: imageUrl }} style={styles.image} />
                   <View style={styles.titleContainer}>
-                    <Text style={styles.title}>{title}</Text>
+                    <Text style={styles.title}>{name}</Text>
                     <Text style={styles.address}>{address}</Text>
                   </View>
                   <Pressable onPress={() => handleItemPress(item)}>

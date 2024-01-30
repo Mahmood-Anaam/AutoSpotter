@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { SCREENS } from "../../utilities/constants";
 import HomeScreen from "../../screens/Home";
 import ChooseGateScreen from "../../screens/ChooseGate";
+import ChooseFloorScreen from "../../screens/ChooseFloor";
 import PickParkingSpotScreen from "../../screens/PickParkingSpot";
 import ParkingBookingDetailsScreen from "../../screens/ParkingBookingDetails";
 import ParkingBookingSummaryScreen from "../../screens/ParkingBookingSummary";
@@ -18,7 +19,7 @@ const HomeStack = () => {
         name={SCREENS.HOME_SCREEN}
         component={HomeScreen}
         options={{
-          header: () => {},
+          header: () => { },
           headerStyle: {
             height: 0,
           },
@@ -29,7 +30,18 @@ const HomeStack = () => {
         name={SCREENS.CHOOSE_GATE_SCREEN}
         component={ChooseGateScreen}
         options={{
-          header: () => {},
+          header: () => { },
+          headerStyle: {
+            height: 0,
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name={SCREENS.CHOOSE_FLOOR_SCREEN}
+        component={ChooseFloorScreen}
+        options={{
+          header: () => { },
           headerStyle: {
             height: 0,
           },
@@ -40,7 +52,7 @@ const HomeStack = () => {
         name={SCREENS.PICK_PARKING_SPOT_SCREEN}
         component={PickParkingSpotScreen}
         options={{
-          header: () => {},
+          header: () => { },
           headerStyle: {
             height: 0,
           },
@@ -51,7 +63,7 @@ const HomeStack = () => {
         name={SCREENS.PARKING_BOOKING_DETAIL_SCREEN}
         component={ParkingBookingDetailsScreen}
         options={{
-          header: () => {},
+          header: () => { },
           headerStyle: {
             height: 0,
           },
@@ -62,7 +74,7 @@ const HomeStack = () => {
         name={SCREENS.PARKING_BOOKING_SUMMARY_SCREEN}
         component={ParkingBookingSummaryScreen}
         options={{
-          header: () => {},
+          header: () => { },
           headerStyle: {
             height: 0,
           },
@@ -73,7 +85,7 @@ const HomeStack = () => {
         name={SCREENS.CHANGE_PAYMENT_METHOD_SCREEN}
         component={ChangePaymentCardScreen}
         options={{
-          header: () => {},
+          header: () => { },
           headerStyle: {
             height: 0,
           },
@@ -84,7 +96,7 @@ const HomeStack = () => {
         name={SCREENS.PARKING_TICKET_SCREEN}
         component={ParkingTicketScreen}
         options={{
-          header: () => {},
+          header: () => { },
           headerStyle: {
             height: 0,
           },
@@ -95,7 +107,7 @@ const HomeStack = () => {
         name={SCREENS.ADD_NEW_Card_SCREEN}
         component={AddNewPaymentCardScreen}
         options={{
-          header: () => {},
+          header: () => { },
           headerStyle: {
             height: 0,
           },

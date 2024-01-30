@@ -9,7 +9,16 @@ import ProfileItem from "../../components/ProfileItem";
 import AppButton from "../../components/AppButton";
 import { COLORS } from "../../utilities/colors";
 import { getAuth } from "firebase/auth";
+import TextAvatar from "react-native-text-avatar";
+
+
+
 const ProfileScreen = ({ navigation }) => {
+  const user = getAuth().currentUser;
+  const email = user.email == null ? "" : user.email;
+  const name = user.displayName == null ? "" : user.displayName;
+  const phoneNumber = user.phoneNumber == null ? "" : user.phoneNumber;
+
   const refRBSheet = useRef();
 
   return (
@@ -19,9 +28,16 @@ const ProfileScreen = ({ navigation }) => {
       <AppBar title="Profile" rightIcon />
 
       <View style={styles.infoContainer}>
-        <Image source={ASSETS.EllipseImg} width={140} height={140} />
-        <Text style={styles.name}>Olivia Lucas</Text>
-        <Text style={styles.email}>Olivia Lucas@yourdomain.com</Text>
+        
+        <TextAvatar
+
+          backgroundColor={'#33691e'}
+          textColor={'#d5e0d1'}
+          size={140}
+          type={'circle'} // optional
+        >{name.toUpperCase()}</TextAvatar>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.email}>{phoneNumber}</Text>
       </View>
 
       <ProfileItem
@@ -84,12 +100,12 @@ const ProfileScreen = ({ navigation }) => {
         title="Logout"
         leftIcon
         logout
-        onPress={ async() => {
+        onPress={async () => {
           await getAuth().signOut();
           refRBSheet.current.open();
-        
+
         }
-      }
+        }
       />
 
       <RBSheet

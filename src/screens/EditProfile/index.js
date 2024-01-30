@@ -4,8 +4,18 @@ import styles from "./styles";
 import AppBar from "../../components/AppBar";
 import AppTextInput from "../../components/AppTextInput";
 import AppButton from "../../components/AppButton";
+import { getAuth } from "firebase/auth";
+
 
 const EditProfileScreen = ({ navigation }) => {
+  const user = getAuth().currentUser;
+
+  const email = user.email == null ? "" : user.email;
+  const name = user.displayName == null ? "" : user.displayName;
+  const phoneNumber = user.phoneNumber == null ? "" : user.phoneNumber;
+
+
+
   return (
     <View style={styles.container}>
       <AppBar
@@ -20,17 +30,12 @@ const EditProfileScreen = ({ navigation }) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <AppTextInput
           placeholderTextColor="#212121"
-          placeholder="Olivia Lucas"
+          value={name}
+          placeholder={"Full Name"}
           containerStyle={styles.inputContainerStyle}
           inputStyle={styles.inputStyle}
         />
 
-        <AppTextInput
-          placeholderTextColor="#212121"
-          placeholder="Olivia"
-          containerStyle={styles.inputContainerStyle}
-          inputStyle={styles.inputStyle}
-        />
 
         <AppTextInput
           calender
@@ -43,7 +48,8 @@ const EditProfileScreen = ({ navigation }) => {
         <AppTextInput
           emailAddress
           placeholderTextColor="#212121"
-          placeholder="andrew_ainsley@yourdomain.com"
+          value={email}
+          placeholder={"exp@gmail.com"}
           containerStyle={styles.inputContainerStyle}
           inputStyle={styles.inputStyle}
         />
@@ -59,7 +65,8 @@ const EditProfileScreen = ({ navigation }) => {
         <AppTextInput
           filledArrow
           placeholderTextColor="#212121"
-          placeholder="+1 111 467 378 399"
+          value={phoneNumber}
+          placeholder="Phone number"
           containerStyle={styles.inputContainerStyle}
           inputStyle={styles.inputStyle}
         />

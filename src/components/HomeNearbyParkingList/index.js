@@ -13,7 +13,7 @@ const HomeNearbyParkingList = ({ navigation }) => {
   const deleteFromSavedParkingIDS = useStore((state) => state.deleteFromSavedParkingIDS);
   const getGatesByParkingId = useStore((state) => state.getGatesByParkingId);
 
-  const ToggleSaved = (saved,id) => {
+  const ToggleSaved = (saved, id) => {
     saved ? deleteFromSavedParkingIDS(id) : addToSavedParkingIDS(id);
   };
 
@@ -52,7 +52,7 @@ const HomeNearbyParkingList = ({ navigation }) => {
             onPress={() => {
 
               const gates = getGatesByParkingId(id);
-              navigation.push(SCREENS.CHOOSE_GATE_SCREEN, {gates});
+              navigation.push(SCREENS.CHOOSE_GATE_SCREEN, { gates });
             }}
           >
             <HomeNearbyCard
@@ -65,7 +65,7 @@ const HomeNearbyParkingList = ({ navigation }) => {
               estimatedTime={estimatedTime}
               availableSpots={availableSpots}
               saved={saved}
-              ToggleSaved={() => ToggleSaved(saved,id)}
+              ToggleSaved={() => ToggleSaved(saved, id)}
             />
           </Pressable>
         );

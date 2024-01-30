@@ -20,6 +20,7 @@ export const SCREENS = {
   //Home Stack
   HOME_SCREEN: "HomeScreen",
   CHOOSE_GATE_SCREEN: "ChooseGateScreen",
+  CHOOSE_FLOOR_SCREEN: "ChooseFloorScreen",
   PICK_PARKING_SPOT_SCREEN: "PickParkingSpotScreen",
   PARKING_BOOKING_DETAIL_SCREEN: "ParkingBookingDetailScreen",
   PARKING_BOOKING_SUMMARY_SCREEN: "ParkingBookingSummaryScreen",

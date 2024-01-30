@@ -8,10 +8,11 @@ import Timer from "../../components/Timer";
 import AppButton from "../../components/AppButton";
 import { SCREENS } from "../../utilities/constants";
 import Toast from "react-native-simple-toast";
+import { updateProfile } from "firebase/auth";
 
 const OtpCodeScreen = ({ route, navigation }) => {
 
-  const { confirmationResult, fullName, phoneNumber } = route.params;
+  const { confirmationResult, fullName } = route.params;
   [code, setCode] = useState('');
 
 
@@ -21,13 +22,20 @@ const OtpCodeScreen = ({ route, navigation }) => {
 
     try {
       const userCredential = await confirmationResult.confirm(code);
-      if (userCredential != null && fullName != null) {
-        await userCredential.user.updateDisplayName(fullName);
+
+
+      if (userCredential != null) {
+        if (fullName != null) {
+          await updateProfile(userCredential.user, {
+            displayName: fullName
+          });
+        }
+        navigation.replace(SCREENS.BOTTOM_NAVIGATOR);
       }
-      navigation.replace(SCREENS.BOTTOM_NAVIGATOR);
+
     } catch (error) {
       Toast.show(error, Toast.CENTER);
-      
+
     }
   };
 
@@ -65,7 +73,7 @@ const OtpCodeScreen = ({ route, navigation }) => {
           onDeadlineHandler={async () => {
             navigation.pop();
             Toast.show("Confirm Failed.Please try again.", Toast.LONG);
-            
+
 
           }}
         />

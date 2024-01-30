@@ -53,9 +53,11 @@ const styles = StyleSheet.create({
   },
 
 
+
   lottieStyle: {
-    
-    height: VSPACING.s60*5,
+    height: VSPACING.s30*3,
+    marginTop:"auto",
+    marginBottom:"auto",
     alignSelf: "center",
   },
 

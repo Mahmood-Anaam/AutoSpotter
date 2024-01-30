@@ -7,11 +7,10 @@ import { COLLECTIONS_REFS } from "../utilities/constants";
 
 export const loadParking = async () => {
 
-    let parking=[];
+    let parking = [];
     let error = "";
 
     try {
-        console.log("Start getting parking data from firebase");
         const q = query(collection(db, COLLECTIONS_REFS.PARKING), orderBy('date', 'asc'));
         const querySnapshot = await getDocs(q);
         parking = querySnapshot.docs.map((doc) => {
@@ -21,12 +20,11 @@ export const loadParking = async () => {
             };
         });
 
-        return {parking,error};
+        return { parking, error };
 
     } catch (e) {
         error = e;
-        console.log("Error getting parking data from firebasexxxx: ("+error+")");
-        return {parking,error};
+        return { parking, error };
     }
 
 
@@ -35,25 +33,26 @@ export const loadParking = async () => {
 
 
 
-export const getGates = async () => {
-
+export const loadGates = async () => {
+    let gates = [];
+    let error = "";
 
     try {
 
         const q = query(collection(db, COLLECTIONS_REFS.GATES), orderBy('name', 'asc'));
         const querySnapshot = await getDocs(q);
-        let gates = querySnapshot.docs.map((doc) => {
+        gates = querySnapshot.docs.map((doc) => {
             return {
                 ...doc.data(),
                 id: doc.id,
             };
         });
 
-        return gates;
+        return { gates, error };
 
-    } catch (error) {
-        console.log("Error getting gates data from firebase: (" + error + ")");
-        return [];
+    } catch (e) {
+        error = e;
+        return { gates, error };
     }
 
 
@@ -63,25 +62,26 @@ export const getGates = async () => {
 
 
 
-export const getFloors = async () => {
+export const loadFloors = async () => {
 
-
+    let floors = [];
+    let error = "";
     try {
 
         const q = query(collection(db, COLLECTIONS_REFS.FLOORS), orderBy('name', 'asc'));
         const querySnapshot = await getDocs(q);
-        let floors = querySnapshot.docs.map((doc) => {
+        floors = querySnapshot.docs.map((doc) => {
             return {
                 ...doc.data(),
                 id: doc.id,
             };
         });
 
-        return floors;
+        return { floors, error };
 
-    } catch (error) {
-        console.log("Error getting floors data from firebase: (" + error + ")");
-        return [];
+    } catch (e) {
+        error = e;
+        return { floors, error };
     }
 
 
@@ -90,25 +90,26 @@ export const getFloors = async () => {
 
 
 
-export const getSpots = async () => {
+export const loadSpots = async () => {
 
-
+    let spots = [];
+    let error = "";
     try {
 
         const q = query(collection(db, COLLECTIONS_REFS.SPOTS), orderBy('name', 'asc'));
         const querySnapshot = await getDocs(q);
-        let spots = querySnapshot.docs.map((doc) => {
+        spots = querySnapshot.docs.map((doc) => {
             return {
                 ...doc.data(),
                 id: doc.id,
             };
         });
 
-        return spots;
+        return { spots, error };
 
-    } catch (error) {
-        console.log("Error getting spots data from firebase: (" + error + ")");
-        return [];
+    } catch (e) {
+        error = e;
+        return { spots, error };
     }
 
 
