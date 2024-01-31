@@ -58,6 +58,11 @@ export const useStore = create(
         return floors;
       },
 
+      getParkingBYId:(parkingId)=>{
+        const parking = get().Parking.find((parking) => parking.id === parkingId);
+        return parking;
+      },
+
       setBookingInfo: (info) => {
         return set({ BookingInfo: info });
       },

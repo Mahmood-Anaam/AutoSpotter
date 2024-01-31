@@ -10,7 +10,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     paddingHorizontal: HSPACING.s20,
     paddingTop: VSPACING.s20,
-    paddingBottom: VSPACING.s12,
+    paddingBottom: VSPACING.s12
+
+    
   },
   contentContainer: {
     marginBottom: VSPACING.s12,
@@ -19,25 +21,31 @@ const styles = StyleSheet.create({
     marginBottom: VSPACING.s20,
   },
   titleText: {
-    fontSize: normalizeFontSize(20),
+    fontSize: normalizeFontSize(15),
     fontFamily: FONTS.MEDIUM,
     color: COLORS.BLACK,
+    marginBottom:VSPACING.s4
   },
   calendar: {
+    
     padding: SPACING.s12,
-    marginVertical: VSPACING.s16,
+    marginVertical: VSPACING.s12,
     backgroundColor: COLORS.LIGHT_BLUE_WHITE,
     borderRadius: SPACING.s10,
+    
   },
   viewWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "column",
     justifyContent: "space-between",
-    marginBottom: VSPACING.s16,
+    // marginBottom: VSPACING.s16,
+    
+
+    
   },
   wrapper: {
     flex: 1,
-    gap: SPACING.s12,
+    paddingTop:VSPACING.s20,
+    // gap: SPACING.s12,
   },
   titleContainer: {
     flexDirection: "row",
@@ -74,12 +82,14 @@ const styles = StyleSheet.create({
     fontSize: normalizeFontSize(18),
     fontFamily: FONTS.BOLD,
     color: COLORS.PRIMARY,
+    backgroundColor: COLORS.LIGHT_BLUE_WHITE,
   },
   btn: {
     marginBottom: VSPACING.s20,
   },
   buttonContainer: {
     marginVertical: VSPACING.s12,
+    marginTop:"40%"
   },
 });
 

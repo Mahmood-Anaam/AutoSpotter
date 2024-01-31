@@ -32,6 +32,22 @@ export const getCurrentTime = () => {
   return `${hours}:00 ${ampm}`;
 };
 
+export const formatTime = (date) => {
+  let minutes = date.getMinutes();
+  let hours = date.getHours() % 12 || 12;
+
+  // if(minutes>30||minutes==0){
+  //   console.log(minutes)
+  //   hours = hours+1;
+  //   minutes="00";
+  // }else{
+  //   minutes="30";
+  // }
+  // hours = hours % 12 || 12;
+  const ampm = hours < 12 ? "AM" : "PM";
+  return `${appendZero(hours)}:${appendZero(minutes)} ${ampm}`;
+};
+
 export const formatDate = (dateString) => {
   const months = [
     "January",
