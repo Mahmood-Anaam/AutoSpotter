@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { COLORS } from "../../utilities/colors";
 import { HSPACING, SPACING, VSPACING } from "../../utilities/spacing";
 import { FONTS } from "../../utilities/fonts";
-import { HEIGHT, WIDTH,normalizeFontSize } from "../../utilities/responsive";
+import { HEIGHT, WIDTH, normalizeFontSize } from "../../utilities/responsive";
 
 const styles = StyleSheet.create({
   container: {
@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: HSPACING.s20,
     paddingTop: VSPACING.s20,
     paddingBottom: VSPACING.s12,
+    
   },
   containerStyle: {
     marginBottom: VSPACING.s20,
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: SPACING.s6,
-    marginHorizontal:SPACING.s4,
+    marginHorizontal: SPACING.s4,
     marginVertical: SPACING.s8,
   },
   mainWrapper: {
@@ -100,17 +101,32 @@ const styles = StyleSheet.create({
     width: WIDTH,
     alignItems: "center",
     justifyContent: "center",
+    
   },
 
   emptyListText: {
     fontSize: normalizeFontSize(18),
     fontFamily: FONTS.MEDIUM,
     color: COLORS.PRIMARY,
+    marginTop: "auto",
     marginBottom:"auto",
-    marginTop:"auto",
-    textAlign:"center"
+    textAlign: "center",
+
+  
+   
+   
+    
+
+  
   },
 
+  
+  lottieStyle: {
+    height: VSPACING.s30*3,
+    marginTop:"auto",
+    marginBottom:"auto",
+    alignSelf: "center",
+  },
 
   bookedText: {
     fontSize: SPACING.s16,
@@ -119,13 +135,8 @@ const styles = StyleSheet.create({
   },
   notAvailableContainer: {},
   continueBtn: {
-   
-    marginTop:"115%",
-    
-   
-    
 
-    
+    marginTop: "115%"
   },
 });
 

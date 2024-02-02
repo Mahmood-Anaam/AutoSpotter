@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginVertical: VSPACING.s20,
+    marginVertical: VSPACING.s8,
   },
   listItemWrapper: {
     width: WIDTH * 0.2,
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: WIDTH * 0.1,
     backgroundColor: COLORS.WHITE,
+  
   },
   listItemWrapperChecked: {
     borderWidth: 2,

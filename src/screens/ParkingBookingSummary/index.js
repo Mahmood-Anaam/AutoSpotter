@@ -7,7 +7,7 @@ import {
   Pressable,
   Modal,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import AppBar from "../../components/AppBar";
 import { useNavigation } from "@react-navigation/native";
 import styles from "./styles";
@@ -16,111 +16,122 @@ import { ASSETS } from "../../utilities/assets";
 import { SCREENS } from "../../utilities/constants";
 import AppButton from "../../components/AppButton";
 import { COLORS } from "../../utilities/colors";
+import { useStore } from "../../store/store";
+
 
 const ParkingBookingSummaryScreen = (props) => {
+
+  const { spot } = props.route.params;
   const navigation = useNavigation();
-  const {
-    item,
-    chosenGate,
-    checkedSpot,
-    checkedFloor,
-    startTime,
-    endTime,
-    duration,
-    date,
-  } = props.route.params;
+  const { startDate, endDate } = useStore((state) => state.BookingInfo);
 
-  const { title, address, cost } = item;
+  const floor = useStore((state) => state.getFloorBYId)(spot.floorId);
+  const gate = useStore((state) => state.getGateBYId)(floor.gateId);
+  const parking = useStore((state) => state.getParkingBYId)(gate.parkingId);
 
-  const [visible, setVisible] = React.useState(false);
 
+  const bookStartDateTime = new Date(startDate);
+  const bookEndDateTime = new Date(endDate);
+  const duration = ((((endDate - startDate) / 1000) / 60) / 60);
+
+  const bookStartDateTimeFormat = bookStartDateTime.toLocaleTimeString("en-GB", {
+    hour12: true,
+    hour: "numeric",
+    minute: "numeric",
+    month: "numeric",
+    day: "numeric",
+    year: "numeric"
+  }).replaceAll("/", "-");
+
+
+  const bookEndDateTimeFormat = bookEndDateTime.toLocaleTimeString("en-GB", {
+    hour12: true,
+    hour: "numeric",
+    minute: "numeric",
+    month: "numeric",
+    day: "numeric",
+    year: "numeric"
+  }).replaceAll("/", "-");
+
+  const taxes = (parking.cost * duration * 10) / 100;
+  const totalCost = parking.cost * duration + taxes;
+
+  const [visible, setVisible] = useState(false);
+
+
+
+  
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  const checkedFloorText = (floor) => {
-    switch (floor) {
-      case "first":
-        return "1st Floor";
-      case "second":
-        return "2nd Floor";
-      case "third":
-        return "3rd Floor";
-    }
-  };
 
-  const parkingSpot =
-    checkedFloorText(checkedFloor) + " ( " + checkedSpot + " ) ";
 
-  const parkingCostPerHour = " $ " + cost;
 
-  const start = startTime === "00:00" ? "00:00 AM" : startTime;
-  const Hours = start + " - " + endTime;
-  const durationHours = duration + " Hours";
-  const chosenData = formatDate(date);
-  const costWithoutTaxes = cost * duration;
-  const taxes = (cost * duration * 10) / 100;
-  const totalCost = cost * duration + taxes;
 
   const summary = [
     {
       id: 1,
       title: "Parking Area",
-      value: title,
+      value: parking.name,
     },
     {
       id: 2,
       title: "Address",
-      value: address,
+      value: parking.address,
     },
     {
       id: 3,
       title: "Gate",
-      value: chosenGate.title,
+      value: gate.name,
     },
     {
       id: 4,
       title: "Parking Spot",
-      value: parkingSpot,
+      value: `${floor.name} (${spot.name})`,
     },
     {
       id: 5,
-      title: "Date",
-      value: chosenData,
+      title: "Start Date",
+      value: bookStartDateTimeFormat,
     },
     {
       id: 6,
-      title: "Hours",
-      value: Hours,
+      title: "End Date",
+      value: bookEndDateTimeFormat,
     },
   ];
+
+
 
   const pricingSummary = [
     {
       id: 1,
       title: "Cost Per Hour",
-      value: parkingCostPerHour,
+      value: `${parking.cost} SAR`,
     },
     {
       id: 2,
       title: "Duration",
-      value: durationHours,
+      value: `${duration} Hours`,
     },
     {
       id: 3,
       title: "Cost Without Taxes",
-      value: " $ " + costWithoutTaxes,
+      value: `${parking.cost * duration} SAR`,
     },
     {
       id: 4,
       title: "Taxes & Fees (10%)",
-      value: " $ " + taxes,
+      value: `${taxes} SAR`,
     },
     {
       id: 5,
       title: "Total Cost",
-      value: " $ " + totalCost,
+      value: `${totalCost} SAR`,
     },
   ];
+
+
 
   const navigateToChangePaymentCard = () => {
     navigation.navigate(SCREENS.CHANGE_PAYMENT_METHOD_SCREEN, {
@@ -170,7 +181,7 @@ const ParkingBookingSummaryScreen = (props) => {
         )}
       />
 
-      <View style={styles.cardContainer}>
+      {/* <View style={styles.cardContainer}>
         <View style={styles.card}>
           <Image source={ASSETS.masterCardImg} />
           <Text style={styles.cardText}>•••• •••• •••• •••• 4679</Text>
@@ -178,21 +189,21 @@ const ParkingBookingSummaryScreen = (props) => {
         <Pressable onPress={navigateToChangePaymentCard}>
           <Text style={styles.changeText}>Change</Text>
         </Pressable>
-      </View>
+      </View> */}
 
       <AppButton
-        title="Confirm Payment"
+        title= "Payment Card"//"Confirm Payment"
         containerStyle={styles.buttonContainer}
-        onPress={showModal}
+        onPress={navigateToChangePaymentCard}   //{showModal}
       />
-
+{/* 
       {visible && (
         <ModalComponent
           hideModal={hideModal}
           navigateToTicketScreen={navigateToViewParkingTicketScreen}
           visible={visible}
         />
-      )}
+      )} */}
     </ScrollView>
   );
 };
@@ -208,6 +219,13 @@ const CardItem = (props) => {
     </View>
   );
 };
+
+
+
+
+
+
+
 
 const ModalComponent = (props) => {
   const { visible, hideModal, navigateToTicketScreen } = props;

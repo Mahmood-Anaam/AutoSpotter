@@ -19,16 +19,16 @@ import {
   PaypalSVG,
 } from "../../components/SVG/SVG";
 import AppTextInput from "../../components/AppTextInput";
-import { logger } from "../../utilities/HelperFunctions";
 import AppButton from "../../components/AppButton";
 import Toast from "react-native-simple-toast";
+import { useStore } from "../../store/store";
 
 const AddNewPaymentCardScreen = () => {
-  const navigation = useNavigation();
 
-  const [checkedMasterCard, setCheckedMasterCard] = useState(
-    PaymentMethods[3].checked
-  );
+  const navigation = useNavigation();
+  const addToPaymentMethodsUser = useStore((state) => state.addToPaymentMethodsUser);
+  const PaymentMethodsUser = useStore((state) => state.PaymentMethodsUser);
+  const [checkedMasterCard, setCheckedMasterCard] = useState(PaymentMethods[3]);
 
   const [cardHolderName, setCardHolderName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
@@ -85,6 +85,20 @@ const AddNewPaymentCardScreen = () => {
       Toast.show("Please enter CVV", Toast.LONG);
       return;
     }
+    
+   const card = {
+      id: PaymentMethodsUser.length + 1,
+      cvv: cvv,
+      cardNumber: cardNumber,
+      validThru:validThru,
+      cardHolderName:cardHolderName,
+      title: checkedMasterCard.title,
+      checked: checkedMasterCard.checked,
+    };
+    
+    addToPaymentMethodsUser(card);
+    console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
+    console.log(PaymentMethodsUser)
     Toast.show("Successfully added new card", Toast.LONG);
     navigation.goBack();
   };
@@ -140,10 +154,10 @@ const AddNewPaymentCardScreen = () => {
               {cardHolderName || "Cameron Williamson"}
             </Text>
 
-            {checkedMasterCard == "paypal" && <PaypalSVG size={48} />}
-            {checkedMasterCard == "googlePay" && <GoogleSVG size={48} />}
-            {checkedMasterCard == "applePay" && <ApplePaySVG size={48} />}
-            {checkedMasterCard == "masterCard" && <MasterCardSVG />}
+            {checkedMasterCard.checked == "paypal" && <PaypalSVG size={48} />}
+            {checkedMasterCard.checked == "googlePay" && <GoogleSVG size={48} />}
+            {checkedMasterCard.checked == "applePay" && <ApplePaySVG size={48} />}
+            {checkedMasterCard.checked == "masterCard" && <MasterCardSVG />}
           </View>
         </View>
       </ImageBackground>
@@ -155,14 +169,14 @@ const AddNewPaymentCardScreen = () => {
         contentContainerStyle={styles.listItemContainer}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
-          logger(item);
+         
           return (
             <Pressable
-              onPress={() => setCheckedMasterCard(item.checked)}
+              onPress={() => setCheckedMasterCard(item)}
               style={[
                 styles.listItemWrapper,
-                item.checked == checkedMasterCard &&
-                  styles.listItemWrapperChecked,
+                item.checked == checkedMasterCard.checked &&
+                styles.listItemWrapperChecked,
               ]}
             >
               {item.checked == "paypal" && <PaypalSVG />}

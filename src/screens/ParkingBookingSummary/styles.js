@@ -16,10 +16,10 @@ const styles = StyleSheet.create({
     marginBottom: VSPACING.s12,
   },
   flatListContainer: {
-    padding: SPACING.s12,
+    padding: SPACING.s4,
     backgroundColor: COLORS.WHITE,
     borderRadius: SPACING.s10,
-    marginBottom: VSPACING.s10,
+    marginBottom: VSPACING.s4,
   },
   cardItem: {
     flexDirection: "row",
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     color: COLORS.BLACK,
   },
   buttonContainer: {
-    marginTop: VSPACING.s26,
+    marginTop: HEIGHT*0.08,
   },
   modalContainerStyle: {
     flex: 1,

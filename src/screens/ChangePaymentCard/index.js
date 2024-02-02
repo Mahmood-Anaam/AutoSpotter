@@ -10,19 +10,22 @@ import React from "react";
 import AppBar from "../../components/AppBar";
 import { useNavigation } from "@react-navigation/native";
 import styles from "./styles";
-import { PaymentMethods } from "../../utilities/data";
+
 import { ApplePaySVG, GoogleSVG, PaypalSVG } from "../../components/SVG/SVG";
 import { ASSETS } from "../../utilities/assets";
 import { RadioButton } from "react-native-paper";
 import { COLORS } from "../../utilities/colors";
 import AppButton from "../../components/AppButton";
 import { SCREENS } from "../../utilities/constants";
+import { useStore } from "../../store/store";
 
 const ChangePaymentCardScreen = (props) => {
   const navigation = useNavigation();
   const { summary, pricingSummary } = props.route.params;
+  const PaymentMethodsUser = useStore((state) => state.PaymentMethodsUser);
 
   const [isChecked, setIsChecked] = React.useState("masterCard");
+
 
   return (
     <ScrollView style={styles.container}>
@@ -40,7 +43,7 @@ const ChangePaymentCardScreen = (props) => {
       <Text style={styles.title}>Choose Payment Methods</Text>
 
       <FlatList
-        data={PaymentMethods}
+        data={PaymentMethodsUser}
         keyExtractor={(item) => item.id}
         scrollEnabled={false}
         renderItem={({ item }) => {
@@ -58,6 +61,7 @@ const ChangePaymentCardScreen = (props) => {
         }}
       />
 
+
       <AppButton
         title="Add New Card"
         addSvg
@@ -69,15 +73,19 @@ const ChangePaymentCardScreen = (props) => {
         }}
       />
 
-      <AppButton
-        title="Continue"
-        onPress={() => {
-          navigation.navigate(SCREENS.PARKING_TICKET_SCREEN, {
-            summary,
-            pricingSummary,
-          });
-        }}
-      />
+      {PaymentMethodsUser.length > 0 && (
+        <AppButton
+          title="Continue"
+          onPress={() => {
+            navigation.navigate(SCREENS.PARKING_TICKET_SCREEN, {
+              summary,
+              pricingSummary,
+            });
+          }}
+        />
+      )}
+
+
     </ScrollView>
   );
 };

@@ -27,6 +27,7 @@ const HomeScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isFetching, setIsFetching] = useState(true);
 
+  
   const setParking = useStore((state) => state.setParking);
   const setGates = useStore((state) => state.setGates);
   const setFloors = useStore((state) => state.setFloors);

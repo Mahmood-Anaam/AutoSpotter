@@ -15,7 +15,10 @@ import { ASSETS } from "../../utilities/assets";
 import { CheckSVG } from "../../components/SVG/SVG";
 import AppButton from "../../components/AppButton";
 import Toast from "react-native-simple-toast";
+import LottieView from "lottie-react-native";
 import { useStore } from "../../store/store";
+import { loadAvailableFloorSpots } from "../../repositorys/APIRepository";
+
 
 const PickParkingSpotScreen = (props) => {
   const navigation = useNavigation();
@@ -42,10 +45,24 @@ const PickParkingSpotScreen = (props) => {
   const [checkedFloor, setCheckedFloor] = useState(floors[0]);
   const [checkedSpot, setCheckedSpot] = useState("");
 
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFetching, setIsFetching] = useState(true);
+  const [availableSpotsCurrents, SetavailableSpotsCurrents] = useState([]);
+  const BookingInfo = useStore((state) => state.BookingInfo);
+  const addBookingInfo = useStore((state) => state.addBookingInfo);
+
+
+
+
   const onButtonPress = () => {
     if (checkedSpot === "") {
       Toast.show("Pls select a spot.", Toast.LONG);
     } else {
+      addBookingInfo({spotId: checkedSpot.id});
+      navigation.navigate(SCREENS.PARKING_BOOKING_SUMMARY_SCREEN,{spot:checkedSpot});
+
+
+
       // navigation.navigate(SCREENS.PARKING_BOOKING_DETAIL_SCREEN);
       // navigation.navigate(SCREENS.PARKING_BOOKING_SUMMARY_SCREEN, {
       //   item,
@@ -60,8 +77,34 @@ const PickParkingSpotScreen = (props) => {
     }
   };
 
+  useEffect(() => {
+    async function fetch() {
+      const parmes = { floorId: checkedFloor.id, ...BookingInfo };
+      await loadAvailableFloorSpots(parmes).then((respons) => {
+        const { spots, errorMsg } = respons;
+        if (errorMsg === null) {
+          SetavailableSpotsCurrents(spots);
+          console.log("sucess loading Available Floor Spots data from API");
+        } else {
+          console.log(
+            "Error loading Available Floor Spots data from API: (" + errorMsg + ")"
+          );
+          Toast.show(
+            "Error loading Available Floor Spots data from API: (" + errorMsg + ")",
+            Toast.CENTER
+          );
+        }
+      });
+
+      setIsLoading(false);
+    }
+
+    fetch();
+  }, [isFetching]);
+
+
   return (
-    <ScrollView style={styles.container} scrollEnabled={false}>
+    <ScrollView style={styles.container} scrollEnabled={false} >
       <AppBar
         title="Pick Parking Spot"
         leftIcon
@@ -83,6 +126,11 @@ const PickParkingSpotScreen = (props) => {
                 onPress={() => {
                   setCheckedFloor(item);
                   setCheckedSpot("");
+                  setIsLoading(true);
+                  setIsFetching(!isFetching);
+                  SetavailableSpotsCurrents([]);
+
+
                 }}
                 name={item.name}
                 checked={item.id === checkedFloor.id}
@@ -92,19 +140,36 @@ const PickParkingSpotScreen = (props) => {
         }}
       />
 
-      {checkedFloor && (
+
+      {!isLoading && (
+
+
         <FlatList
           horizontal
-          data={checkedFloor.spots}
+          data={availableSpotsCurrents}
           scrollEnabled={false}
           nestedScrollEnabled={true}
           keyExtractor={(item) => item.id}
+
+          ListEmptyComponent={
+
+            <View style={styles.emptyListContainer}>
+              <Text style={styles.emptyListText}>
+                No Spots Available
+              </Text>
+            </View>
+
+
+
+          }
+
+
           renderItem={({ item }) => {
             return (
               <View key={item} style={styles.allSpotsRowContainer}>
                 <View style={styles.spotRowWrapper}>
                   <ParkingSpotItem
-                    status={item.status}
+                    status={"available"}
                     name={item.name}
                     isChecked={item.id === checkedSpot.id}
                     onPress={() => setCheckedSpot(item)}
@@ -114,16 +179,44 @@ const PickParkingSpotScreen = (props) => {
             );
           }}
         />
+
       )}
 
-      <AppButton
-        onPress={onButtonPress}
-        title="Continue"
-        containerStyle={styles.continueBtn}
-      />
+
+      {!isLoading && (
+        <AppButton
+          onPress={onButtonPress}
+          title="Continue"
+          containerStyle={styles.continueBtn}
+        />
+      )}
+
+
+
+
+
+      {isLoading && (
+
+        <LottieView
+          CENTER={true}
+          source={ASSETS.loading}
+          style={styles.lottieStyle}
+          autoPlay
+          loop
+        />
+
+      )}
+
+
+
+
+
+
     </ScrollView>
   );
 };
+
+
 
 export default PickParkingSpotScreen;
 
@@ -146,28 +239,16 @@ const ParkingSpotItem = (props) => {
   const { name, status, isChecked, onPress } = props;
   return (
     <Pressable
-      disabled={status === "booked" || status === "not available"}
       onPress={onPress}
       style={[
         styles.spotItemWrapper,
-        status !== "not available" && styles.mainWrapper,
-        status === "not available" && styles.notAvailableContainer,
+        status == "available" && styles.mainWrapper,
         status === "available" && styles.availableContainer,
-        status === "booked" && styles.bookedContainer,
         isChecked && styles.checkedWrapper,
       ]}
     >
-      {status === "not available" && (
-        <Image source={ASSETS.SpotCarImg} style={styles.image} />
-      )}
 
       {status === "available" && (
-        <Text style={[styles.spotText, isChecked && styles.checkedText]}>
-          {name}
-        </Text>
-      )}
-
-      {status === "booked" && (
         <View style={styles.bookedWrapper}>
           <CheckSVG size={24} />
           <Text style={styles.bookedText}>{name}</Text>

@@ -15,7 +15,22 @@ export const useStore = create(
       Gates:[],
       Floors: [],
       BookingInfo:{},
+      PaymentMethodsUser:[],
       FavoritesList: [],
+
+
+
+      addToPaymentMethodsUser: (card) => {
+
+        return set(
+          produce((state) => {
+
+            state.PaymentMethodsUser=[...state.PaymentMethodsUser,{...card}];
+            
+
+          }))
+      },
+
 
 
 
@@ -58,6 +73,18 @@ export const useStore = create(
         return floors;
       },
 
+
+      getFloorBYId:(floorId)=>{
+        const floor = get().Floors.find((floor) => floor.id === floorId);
+        return floor;
+      },
+
+      getGateBYId:(gateId)=>{
+        const gate = get().Gates.find((gate) => gate.id === gateId);
+        return gate;
+      },
+
+      
       getParkingBYId:(parkingId)=>{
         const parking = get().Parking.find((parking) => parking.id === parkingId);
         return parking;

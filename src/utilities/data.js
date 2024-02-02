@@ -1217,6 +1217,7 @@ export const ParkingStates = [
   },
 ];
 
+
 export const PaymentMethods = [
   {
     id: 1,
