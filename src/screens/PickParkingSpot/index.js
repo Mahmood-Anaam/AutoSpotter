@@ -6,7 +6,7 @@ import {
   View,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./styles";
 import AppBar from "../../components/AppBar";
 import { SCREENS } from "../../utilities/constants";
@@ -18,31 +18,50 @@ import Toast from "react-native-simple-toast";
 import { useStore } from "../../store/store";
 
 const PickParkingSpotScreen = (props) => {
-
   const navigation = useNavigation();
   const { floors } = props.route.params;
- 
-  const [checkedFloor, setCheckedFloor] = React.useState(floors[0]);
-  const [checkedSpot, setCheckedSpot] = React.useState("");
 
+  if (floors.length == 0) {
+    return (
+      <View style={styles.container}>
+        <AppBar
+          title="Pick Parking Spot"
+          leftIcon
+          onLeftIconPress={() => {
+            navigation.goBack();
+          }}
+          containerStyle={styles.containerStyle}
+        />
+        <Text style={styles.emptyListText}>
+          No floors have been added to this gates yet.
+        </Text>
+      </View>
+    );
+  }
 
-
-
+  const [checkedFloor, setCheckedFloor] = useState(floors[0]);
+  const [checkedSpot, setCheckedSpot] = useState("");
 
   const onButtonPress = () => {
     if (checkedSpot === "") {
-      
       Toast.show("Pls select a spot.", Toast.LONG);
     } else {
-
-      
-      navigation.navigate(SCREENS.PARKING_BOOKING_DETAIL_SCREEN);
+      // navigation.navigate(SCREENS.PARKING_BOOKING_DETAIL_SCREEN);
+      // navigation.navigate(SCREENS.PARKING_BOOKING_SUMMARY_SCREEN, {
+      //   item,
+      //   chosenGate,
+      //   checkedSpot,
+      //   checkedFloor,
+      //   startTime,
+      //   endTime,
+      //   duration,
+      //   date: selected,
+      // });
     }
   };
 
   return (
     <ScrollView style={styles.container} scrollEnabled={false}>
-
       <AppBar
         title="Pick Parking Spot"
         leftIcon
@@ -58,14 +77,12 @@ const PickParkingSpotScreen = (props) => {
         data={floors}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
-
           return (
             <View>
               <FlootItem
                 onPress={() => {
                   setCheckedFloor(item);
                   setCheckedSpot("");
-
                 }}
                 name={item.name}
                 checked={item.id === checkedFloor.id}
@@ -76,9 +93,6 @@ const PickParkingSpotScreen = (props) => {
       />
 
       {checkedFloor && (
-
-
-
         <FlatList
           horizontal
           data={checkedFloor.spots}
@@ -89,23 +103,17 @@ const PickParkingSpotScreen = (props) => {
             return (
               <View key={item} style={styles.allSpotsRowContainer}>
                 <View style={styles.spotRowWrapper}>
-
                   <ParkingSpotItem
                     status={item.status}
                     name={item.name}
                     isChecked={item.id === checkedSpot.id}
                     onPress={() => setCheckedSpot(item)}
                   />
-
-
                 </View>
-
               </View>
             );
           }}
         />
-
-
       )}
 
       <AppButton

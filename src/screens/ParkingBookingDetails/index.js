@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, Text, TextInput, View, Pressable } from "react-native";
 import styles from "./styles";
-import { getCurrentTime, formatDate, formatTime, logger } from "../../utilities/HelperFunctions";
+import {
+  getCurrentTime,
+  formatDate,
+  formatTime,
+  logger,
+} from "../../utilities/HelperFunctions";
 import { useNavigation } from "@react-navigation/native";
 import AppBar from "../../components/AppBar";
 import { Calendar } from "react-native-calendars";
@@ -13,17 +18,16 @@ import AppButton from "../../components/AppButton";
 import Toast from "react-native-simple-toast";
 import { SCREENS } from "../../utilities/constants";
 import { useStore } from "../../store/store";
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-
-
-
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const ParkingBookingDetailsScreen = (props) => {
-
   const { parkingId, gateId } = props.route.params;
   const navigation = useNavigation();
   const chooseParking = useStore((state) => state.getParkingBYId)(parkingId);
+  const getFloorsBYGateId = useStore((state) => state.getFloorsBYGateId);
   const setBookingInfo = useStore((state) => state.setBookingInfo);
+  const addBookingInfo = useStore((state) => state.addBookingInfo);
+  const BookingInfo = useStore((state) => state.BookingInfo);
 
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -32,96 +36,64 @@ const ParkingBookingDetailsScreen = (props) => {
   const [duration, setDuration] = useState(1);
   const [costTotal, setCostTotal] = useState(chooseParking.cost);
 
-  const [bookStartDateTime, setBookStartDateTime] = useState(null);
-  const [bookEndDateTime, setBookEndDateTime] = useState(null);
-
-
-  const [startTime, setStartTime] = useState(getCurrentTime());
-  const [endTime, setEndTime] = useState(getCurrentTime());
-
-  const calculateEndTime = () => {
-    const [startHour] = startTime.split(":").map(Number);
-    const endHour = startHour + duration;
-    const formattedEndTime =
-      (endHour % 12 || 12) + ":00 " + (endHour < 12 ? "AM" : "PM");
-    setEndTime(formattedEndTime);
-  };
+  const [bookStartDateTime, setBookStartDateTime] = useState(new Date());
+  const [bookEndDateTime, setBookEndDateTime] = useState(new Date());
 
 
 
 
-  const handleSliderChange = (value) => {
-    setCostTotal(value * chooseParking.cost);
-    setDuration(value);
-  };
-
-
+  // .............................................................
 
   const onButtonPress = () => {
-     let startDaeTimetemp = selectedDate;
-     startDaeTimetemp.setHours(selectedTime.getHours(),selectedTime.getMinutes(),0,0);
-    setBookStartDateTime(startDaeTimetemp);
-    
-    startDaeTimetemp.setHours(startDaeTimetemp.getHours()+5)
-    setBookEndDateTime(startDaeTimetemp);
+    console.log(bookStartDateTime.toLocaleString());
+    console.log(bookEndDateTime.toLocaleString());
+    handleSliderChange(duration);
+    if (new Date().getTime() > bookStartDateTime.getTime()) {
+      Toast.show(
+        "Please select the start time of your booking correctly.",
+        Toast.CENTER
+      );
+    } else {
+      addBookingInfo({
+        startDate: bookStartDateTime.getTime(),
+        endDate: bookEndDateTime.getTime(),
+      });
+
+      console.log(bookStartDateTime.toLocaleString());
+      console.log(bookEndDateTime.toLocaleString());
+      console.log(BookingInfo);
+
+      const floors = getFloorsBYGateId(gateId);
+      navigation.navigate(SCREENS.PICK_PARKING_SPOT_SCREEN, {floors});
 
 
-    console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyy")
-    console.log(startDaeTimetemp)
-    console.log(bookStartDateTime)
-    console.log(bookEndDateTime)
 
-
-  };
-
-
-
-
-
-  const onButtonPress2 = () => {
-    if (selected === "") {
-      Toast.show("Pls select a date.", Toast.LONG);
-      return;
-    }
-    if (endTime === "00:00") {
-      Toast.show("Pls select end time.", Toast.LONG);
-      return;
-    }
-    if (endTime < startTime) {
-      Toast.show("End time should be greater than start time.", Toast.LONG);
-      return;
-    }
-    if (endTime === startTime) {
-      Toast.show("End time should be greater than start time.", Toast.LONG);
-      return;
+      // navigation.navigate(SCREENS.PARKING_BOOKING_SUMMARY_SCREEN, {
+      //   item,
+      //   chosenGate,
+      //   checkedSpot,
+      //   checkedFloor,
+      //   startTime,
+      //   endTime,
+      //   duration,
+      //   date: selected,
+      // });
     }
 
-    // navigation.navigate(SCREENS.PARKING_BOOKING_SUMMARY_SCREEN, {
-    //   item,
-    //   chosenGate,
-    //   checkedSpot,
-    //   checkedFloor,
-    //   startTime,
-    //   endTime,
-    //   duration,
-    //   date: selected,
-    // });
   };
 
 
 
   useEffect(() => {
-    // let temp = new Date(Date.now());
-    // temp.setMinutes(temp.getMinutes() + 30);
-    // setSelectedDate(temp);
-    // setSelectedTime(temp);
+    selectedTime.setUTCMinutes(0, 0, 0);
+    selectedTime.setUTCSeconds(0, 0, 0);
+    bookEndDateTime.setUTCMinutes(0, 0, 0);
+    bookStartDateTime.setUTCMinutes(0, 0, 0);
 
-
-
+    handleDatePickerConfirm(selectedDate);
+    handleTimePickerConfirm(selectedTime);
+    handleSliderChange(1);
   }, []);
-
-
-
 
   const showDatePicker = () => {
     setDatePickerVisible(true);
@@ -129,13 +101,6 @@ const ParkingBookingDetailsScreen = (props) => {
 
   const hideDatePicker = () => {
     setDatePickerVisible(false);
-  };
-
-  const handleDatePickerConfirm = (date) => {
-    hideDatePicker();
-    setSelectedDate(date);
-    console.log("DatePickerConfirm: ")
-    console.log(date);
   };
 
 
@@ -148,15 +113,33 @@ const ParkingBookingDetailsScreen = (props) => {
     setTimePickerVisible(false);
   };
 
-  const handleTimePickerConfirm = (date) => {
-    hideTimePicker();
-    setSelectedTime(date);
-    console.log("handleTimePickerConfirm: ")
-    console.log(date);
+
+
+  const handleDatePickerConfirm = (date) => {
+    hideDatePicker();
+    setBookStartDateTime(new Date(date.getTime()));
+    setSelectedDate(date);
   };
 
 
+  const handleTimePickerConfirm = (date) => {
+    hideTimePicker();
+    let startDateTimetemp = new Date(selectedDate.getTime());
+    startDateTimetemp.setHours(date.getHours(), date.getMinutes(), 0, 0);
+    setBookStartDateTime(new Date(startDateTimetemp.getTime()));
+    setBookEndDateTime(new Date(startDateTimetemp.getTime() + duration * 60 * 60 * 1000));
+    setSelectedTime(new Date(date.getTime()));
+  };
 
+  const handleSliderChange = (value) => {
+    setDuration(value);
+    let endDaeTimetemp = new Date(
+      bookStartDateTime.getTime() + value * 60 * 60 * 1000
+    );
+    setBookEndDateTime(new Date(endDaeTimetemp.getTime()));
+    setCostTotal(value * chooseParking.cost);
+
+  };
 
   return (
     <ScrollView
@@ -172,32 +155,23 @@ const ParkingBookingDetailsScreen = (props) => {
         containerStyle={styles.containerStyle}
       />
 
-
-
       <View style={styles.viewWrapper}>
-
         {/* start select date */}
         <View style={styles.wrapper}>
-
           <Text style={styles.titleText}>Booking Date</Text>
           <Pressable
             onPress={() => {
               showDatePicker();
             }}
           >
-
             <View style={styles.timeWrapper}>
               <Text style={styles.timeText}>
-                {
-                  selectedDate.toLocaleString(
-                    "en-GB",
-                    {
-
-                      month: "numeric",
-                      day: "numeric",
-                      year: "numeric",
-                    })
-                }</Text>
+                {selectedDate.toLocaleString("en-GB", {
+                  month: "numeric",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </Text>
               <TimerSVG size={24} />
             </View>
 
@@ -206,14 +180,11 @@ const ParkingBookingDetailsScreen = (props) => {
               minimumDate={selectedDate}
               isVisible={datePickerVisible}
               mode="date"
-              timeZoneName={'Asia/Riyadh'}
+              timeZoneName={"Asia/Riyadh"}
               onConfirm={handleDatePickerConfirm}
               onCancel={hideDatePicker}
             />
-
           </Pressable>
-
-
         </View>
         {/* End select date */}
 
@@ -225,9 +196,14 @@ const ParkingBookingDetailsScreen = (props) => {
               showTimePicker();
             }}
           >
-
             <View style={styles.timeWrapper}>
-              <Text style={styles.timeText}>{selectedTime.toLocaleTimeString("en", { hour12: true, hour: "numeric", minute: "numeric" })}</Text>
+              <Text style={styles.timeText}>
+                {selectedTime.toLocaleTimeString("en", {
+                  hour12: true,
+                  hour: "numeric",
+                  minute: "numeric",
+                })}
+              </Text>
               <TimerSVG size={24} />
             </View>
 
@@ -238,16 +214,14 @@ const ParkingBookingDetailsScreen = (props) => {
               display="spinner"
               is24Hour={false}
               minuteInterval={30}
-              timeZoneName={'Asia/Riyadh'}
+              timeZoneName={"Asia/Riyadh"}
               onConfirm={handleTimePickerConfirm}
               onCancel={hideTimePicker}
             />
-
           </Pressable>
 
         </View>
         {/* End Select Time */}
-
 
         {/* Start Duration */}
         <View style={styles.wrapper}>
@@ -265,26 +239,62 @@ const ParkingBookingDetailsScreen = (props) => {
             minimumTrackTintColor={COLORS.PRIMARY}
             maximumTrackTintColor={COLORS.PRIMARY}
           />
-
         </View>
         {/* End Duration */}
-
       </View>
-
 
       {/* Start Total */}
       <View style={styles.viewWrapper}>
         <View style={styles.wrapper}>
-          <Text style={styles.titleText}>Cost Total</Text>
-          <Text style={[styles.cardCost]}>
-            <Text style={[styles.cardColoredCost]}>{chooseParking.currency} {costTotal}</Text> / {duration} hours
-          </Text>
-        </View>
 
+          <Text style={[styles.titleText]}>
+          Start Date {"     "}
+            <Text style={[styles.cardColoredCostInfo]}>
+              
+              {bookStartDateTime.toLocaleTimeString("en-GB", {
+                  hour12: true,
+                  hour: "numeric",
+                  minute: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                  year: "numeric"
+                }).replaceAll("/","-")}
+            </Text>
+            
+          </Text>
+
+          <Text style={[styles.titleText]}>
+          End Date   {"     "}
+            <Text style={[styles.cardColoredCostInfo]}>
+              
+              {bookEndDateTime.toLocaleTimeString("en-GB", {
+                  hour12: true,
+                  hour: "numeric",
+                  minute: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                  year: "numeric"
+                }).replaceAll("/","-")}
+            </Text>
+            
+          </Text>
+
+
+          <Text style={[styles.titleText,{fontWeight:"bold"}]}>
+            Cost Total   {"     "}
+          
+            <Text style={[styles.cardColoredCostInfo]}>
+              
+              {chooseParking.currency} {costTotal}
+            </Text>{" "}
+            / {duration} hours
+          
+          </Text>
+          
+  
+        </View>
       </View>
       {/* End Total */}
-
-
 
       <View style={styles.buttonContainer}>
         <AppButton
@@ -293,9 +303,6 @@ const ParkingBookingDetailsScreen = (props) => {
           onPress={onButtonPress}
         />
       </View>
-
-
-
     </ScrollView>
   );
 };

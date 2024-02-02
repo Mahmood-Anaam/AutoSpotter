@@ -84,12 +84,21 @@ const styles = StyleSheet.create({
     color: COLORS.PRIMARY,
     backgroundColor: COLORS.LIGHT_BLUE_WHITE,
   },
+
+  cardColoredCostInfo: {
+    fontSize: normalizeFontSize(14),
+    // fontFamily: FONTS.BOLD,
+    // color: COLORS.PRIMARY,
+    // backgroundColor: COLORS.LIGHT_BLUE_WHITE,
+  },
+
+
   btn: {
     marginBottom: VSPACING.s20,
   },
   buttonContainer: {
-    marginVertical: VSPACING.s12,
-    marginTop:"40%"
+    // marginVertical: VSPACING.s12,
+    marginTop:"39%"
   },
 });
 

@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { COLORS } from "../../utilities/colors";
 import { HSPACING, SPACING, VSPACING } from "../../utilities/spacing";
 import { FONTS } from "../../utilities/fonts";
-import { HEIGHT, WIDTH } from "../../utilities/responsive";
+import { HEIGHT, WIDTH,normalizeFontSize } from "../../utilities/responsive";
 
 const styles = StyleSheet.create({
   container: {
@@ -94,6 +94,24 @@ const styles = StyleSheet.create({
     paddingVertical: VSPACING.s12,
     paddingHorizontal: HSPACING.s10,
   },
+
+  emptyListContainer: {
+    height: HEIGHT * 0.2,
+    width: WIDTH,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  emptyListText: {
+    fontSize: normalizeFontSize(18),
+    fontFamily: FONTS.MEDIUM,
+    color: COLORS.PRIMARY,
+    marginBottom:"auto",
+    marginTop:"auto",
+    textAlign:"center"
+  },
+
+
   bookedText: {
     fontSize: SPACING.s16,
     fontFamily: FONTS.BOLD,
@@ -101,7 +119,12 @@ const styles = StyleSheet.create({
   },
   notAvailableContainer: {},
   continueBtn: {
-    marginVertical: VSPACING.s10,
+   
+    marginTop:"115%",
+    
+   
+    
+
     
   },
 });
