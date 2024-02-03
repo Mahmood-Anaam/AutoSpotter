@@ -57,6 +57,43 @@ const styles = StyleSheet.create({
   textContainer: {
     paddingTop: VSPACING.s16,
   },
+
+  modalContainerStyle: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContentStyle: {
+    width: WIDTH * 0.9,
+    height: HEIGHT * 0.6,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: VSPACING.s12,
+    backgroundColor: COLORS.WHITE,
+    paddingHorizontal: HSPACING.s32,
+    borderRadius: 6,
+  },
+  modalText: {
+    fontSize: normalizeFontSize(16),
+    fontFamily: FONTS.SEMI_BOLD,
+    color: COLORS.BLACK,
+    textAlign: "center",
+  },
+
+  lottieStyle: {
+    height: VSPACING.s30*3,
+    marginTop:"auto",
+    marginBottom:"auto",
+    alignSelf: "center",
+  },
+  
+  btnTitleStyle: {
+    color: COLORS.PRIMARY,
+  },
+
+
+
 });
 
 export default styles;

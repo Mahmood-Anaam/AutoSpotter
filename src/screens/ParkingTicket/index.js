@@ -6,9 +6,15 @@ import styles from "./styles";
 import QRCode from "react-native-qrcode-svg";
 import AppButton from "../../components/AppButton";
 import { SCREENS } from "../../utilities/constants";
+import { getAuth } from "firebase/auth";
+import { useStore } from "../../store/store";
 
 const ParkingTicketScreen = (props) => {
   const navigation = useNavigation();
+  const user = getAuth().currentUser;
+  const name = user.displayName == null ? "" : user.displayName;
+  const phoneNumber = user.phoneNumber == null ? "" : user.phoneNumber;
+  const BookingInfo = useStore((state) => state.BookingInfo);
 
   const { summary, pricingSummary } = props.route.params;
 
@@ -17,8 +23,8 @@ const ParkingTicketScreen = (props) => {
       id: 1,
       title1: "Name",
       title2: "Phone Number",
-      value1: "Ibrahim Fathi",
-      value2: "+201555555555",
+      value1: name,
+      value2: phoneNumber,
     },
     {
       id: 2,
@@ -36,18 +42,12 @@ const ParkingTicketScreen = (props) => {
     },
     {
       id: 4,
-      title1: pricingSummary[1]["title"],
-      title2: summary[4]["title"],
-      value1: pricingSummary[1]["value"],
-      value2: summary[4]["value"],
+      title1: summary[4]["title"],
+      title2: summary[5]["title"],
+      value1: summary[4]["value"],
+      value2: summary[5]["value"],
     },
-    {
-      id: 5,
-      title1: summary[5]["title"],
-      title2: pricingSummary[4]["title"],
-      value1: summary[5]["value"],
-      value2: pricingSummary[4]["value"],
-    },
+  
   ];
 
   return (
@@ -67,7 +67,7 @@ const ParkingTicketScreen = (props) => {
           Scan this on the scanner machine when you are in the parking lot
         </Text>
 
-        <QRCode value="https://www.google.com/" size={180} />
+        <QRCode value={BookingInfo.docId} size={180} />
 
         <FlatList
           data={infoData}

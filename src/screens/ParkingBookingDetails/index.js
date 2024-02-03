@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, Text, TextInput, View, Pressable } from "react-native";
 import styles from "./styles";
-import {
-  getCurrentTime,
-  formatDate,
-  formatTime,
-  logger,
-} from "../../utilities/HelperFunctions";
 import { useNavigation } from "@react-navigation/native";
 import AppBar from "../../components/AppBar";
 import { Calendar } from "react-native-calendars";
@@ -25,9 +19,8 @@ const ParkingBookingDetailsScreen = (props) => {
   const navigation = useNavigation();
   const chooseParking = useStore((state) => state.getParkingBYId)(parkingId);
   const getFloorsBYGateId = useStore((state) => state.getFloorsBYGateId);
-  const setBookingInfo = useStore((state) => state.setBookingInfo);
   const addBookingInfo = useStore((state) => state.addBookingInfo);
-  const BookingInfo = useStore((state) => state.BookingInfo);
+ 
 
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -45,8 +38,6 @@ const ParkingBookingDetailsScreen = (props) => {
   // .............................................................
 
   const onButtonPress = () => {
-    console.log(bookStartDateTime.toLocaleString());
-    console.log(bookEndDateTime.toLocaleString());
     handleSliderChange(duration);
     if (new Date().getTime() > bookStartDateTime.getTime()) {
       Toast.show(
@@ -59,25 +50,12 @@ const ParkingBookingDetailsScreen = (props) => {
         endDate: bookEndDateTime.getTime(),
       });
 
-      console.log(bookStartDateTime.toLocaleString());
-      console.log(bookEndDateTime.toLocaleString());
-      console.log(BookingInfo);
+
 
       const floors = getFloorsBYGateId(gateId);
       navigation.navigate(SCREENS.PICK_PARKING_SPOT_SCREEN, {floors});
 
 
-
-      // navigation.navigate(SCREENS.PARKING_BOOKING_SUMMARY_SCREEN, {
-      //   item,
-      //   chosenGate,
-      //   checkedSpot,
-      //   checkedFloor,
-      //   startTime,
-      //   endTime,
-      //   duration,
-      //   date: selected,
-      // });
     }
 
   };
@@ -85,15 +63,15 @@ const ParkingBookingDetailsScreen = (props) => {
 
 
   useEffect(() => {
-    selectedTime.setUTCMinutes(0, 0, 0);
-    selectedTime.setUTCSeconds(0, 0, 0);
-    bookEndDateTime.setUTCMinutes(0, 0, 0);
-    bookStartDateTime.setUTCMinutes(0, 0, 0);
+    selectedTime.setMinutes(0,0,0);
+    selectedTime.setSeconds(0,0,0);
+    bookEndDateTime.setMinutes(0,0,0);
+    bookStartDateTime.setMinutes(0,0,0);
 
     handleDatePickerConfirm(selectedDate);
     handleTimePickerConfirm(selectedTime);
     handleSliderChange(1);
-  }, []);
+  }, [selectedDate]);
 
   const showDatePicker = () => {
     setDatePickerVisible(true);
@@ -119,6 +97,7 @@ const ParkingBookingDetailsScreen = (props) => {
     hideDatePicker();
     setBookStartDateTime(new Date(date.getTime()));
     setSelectedDate(date);
+
   };
 
 

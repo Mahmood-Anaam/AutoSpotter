@@ -24,9 +24,10 @@ import Toast from "react-native-simple-toast";
 import { useStore } from "../../store/store";
 
 const AddNewPaymentCardScreen = () => {
-
   const navigation = useNavigation();
-  const addToPaymentMethodsUser = useStore((state) => state.addToPaymentMethodsUser);
+  const addToPaymentMethodsUser = useStore(
+    (state) => state.addToPaymentMethodsUser
+  );
   const PaymentMethodsUser = useStore((state) => state.PaymentMethodsUser);
   const [checkedMasterCard, setCheckedMasterCard] = useState(PaymentMethods[3]);
 
@@ -85,20 +86,18 @@ const AddNewPaymentCardScreen = () => {
       Toast.show("Please enter CVV", Toast.LONG);
       return;
     }
-    
-   const card = {
+
+    const card = {
       id: PaymentMethodsUser.length + 1,
       cvv: cvv,
       cardNumber: cardNumber,
-      validThru:validThru,
-      cardHolderName:cardHolderName,
+      validThru: validThru,
+      cardHolderName: cardHolderName,
       title: checkedMasterCard.title,
       checked: checkedMasterCard.checked,
     };
-    
+
     addToPaymentMethodsUser(card);
-    console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
-    console.log(PaymentMethodsUser)
     Toast.show("Successfully added new card", Toast.LONG);
     navigation.goBack();
   };
@@ -155,8 +154,12 @@ const AddNewPaymentCardScreen = () => {
             </Text>
 
             {checkedMasterCard.checked == "paypal" && <PaypalSVG size={48} />}
-            {checkedMasterCard.checked == "googlePay" && <GoogleSVG size={48} />}
-            {checkedMasterCard.checked == "applePay" && <ApplePaySVG size={48} />}
+            {checkedMasterCard.checked == "googlePay" && (
+              <GoogleSVG size={48} />
+            )}
+            {checkedMasterCard.checked == "applePay" && (
+              <ApplePaySVG size={48} />
+            )}
             {checkedMasterCard.checked == "masterCard" && <MasterCardSVG />}
           </View>
         </View>
@@ -169,14 +172,13 @@ const AddNewPaymentCardScreen = () => {
         contentContainerStyle={styles.listItemContainer}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
-         
           return (
             <Pressable
               onPress={() => setCheckedMasterCard(item)}
               style={[
                 styles.listItemWrapper,
                 item.checked == checkedMasterCard.checked &&
-                styles.listItemWrapperChecked,
+                  styles.listItemWrapperChecked,
               ]}
             >
               {item.checked == "paypal" && <PaypalSVG />}

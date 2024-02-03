@@ -15,5 +15,6 @@ export const COLORS = {
   GOLD: "#f0c30e",
   GRADIENT: ["#57a8fa", "#3089e2", "#0668c9"],
   GRADIENT2: ["#edeffe", "#a3c3ec"],
+  GRADIENT3: ["#F0F0F0", "#F0F0F0"],
   RED: "#F75555",
 };

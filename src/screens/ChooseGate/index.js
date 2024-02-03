@@ -10,11 +10,7 @@ import { SCREENS } from "../../utilities/constants";
 import { useStore } from "../../store/store";
 import { ASSETS } from "../../utilities/assets";
 
-
-
-
 const ChooseGateScreen = (props) => {
-
   const { gates } = props.route.params;
   const navigation = useNavigation();
 
@@ -29,26 +25,25 @@ const ChooseGateScreen = (props) => {
           }}
           containerStyle={styles.containerStyle}
         />
-        <Text style={styles.emptyListText}>No gates have been added to this parking yet.</Text>
+        <Text style={styles.emptyListText}>
+          No gates have been added to this parking yet.
+        </Text>
       </View>
     );
   }
-
-
 
   const [isChecked, setIsChecked] = useState(gates[0].id);
   const getFloorsBYGateId = useStore((state) => state.getFloorsBYGateId);
 
   const handleOnPress = () => {
-    // const floors = getFloorsBYGateId(isChecked);
-
-    // navigation.navigate(SCREENS.PICK_PARKING_SPOT_SCREEN, { floors });
     const parkingId = gates.find((gate) => {
       return gate.id == isChecked;
     }).parkingId;
     const gateId = isChecked;
-    navigation.navigate(SCREENS.PARKING_BOOKING_DETAIL_SCREEN, { parkingId,gateId });
-    // navigation.navigate(SCREENS.CHOOSE_FLOOR_SCREEN, { floors,parkingId });
+    navigation.navigate(SCREENS.PARKING_BOOKING_DETAIL_SCREEN, {
+      parkingId,
+      gateId,
+    });
   };
 
   return (

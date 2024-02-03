@@ -12,21 +12,25 @@ export const useStore = create(
       Parking: [],
       SavedParking: [],
       SavedParkingIDS: [],
-      Gates:[],
+      Gates: [],
       Floors: [],
-      BookingInfo:{},
-      PaymentMethodsUser:[],
+      BookingInfo: {},
+      PaymentMethodsUser: [],
       FavoritesList: [],
 
 
+
+      getBookingInfo: () => {
+        return {...get().BookingInfo};
+      },
 
       addToPaymentMethodsUser: (card) => {
 
         return set(
           produce((state) => {
 
-            state.PaymentMethodsUser=[...state.PaymentMethodsUser,{...card}];
-            
+            state.PaymentMethodsUser = [...state.PaymentMethodsUser, { ...card }];
+
 
           }))
       },
@@ -35,14 +39,14 @@ export const useStore = create(
 
 
       setParking: (docs) => {
-        const data = docs.map((doc)=>{
+        const data = docs.map((doc) => {
           return {
             ...doc,
-            saved:  get().SavedParkingIDS.filter(element => element === doc.id).length > 0,
+            saved: get().SavedParkingIDS.filter(element => element === doc.id).length > 0,
             currency: "SAR "
           }
         });
-        
+
         return set({ Parking: data });
       },
 
@@ -51,13 +55,13 @@ export const useStore = create(
         return set({ SavedParking: docs });
       },
 
-      
+
       setGates: (docs) => {
         return set({ Gates: docs });
       },
 
 
-      getGatesByParkingId:(parkingId)=>{
+      getGatesByParkingId: (parkingId) => {
         const gates = get().Gates.filter((gate) => gate.parkingId === parkingId);
         return gates;
 
@@ -68,24 +72,24 @@ export const useStore = create(
         return set({ Floors: docs });
       },
 
-      getFloorsBYGateId:(gateId)=>{
+      getFloorsBYGateId: (gateId) => {
         const floors = get().Floors.filter((floor) => floor.gateId === gateId);
         return floors;
       },
 
 
-      getFloorBYId:(floorId)=>{
+      getFloorBYId: (floorId) => {
         const floor = get().Floors.find((floor) => floor.id === floorId);
         return floor;
       },
 
-      getGateBYId:(gateId)=>{
+      getGateBYId: (gateId) => {
         const gate = get().Gates.find((gate) => gate.id === gateId);
         return gate;
       },
 
-      
-      getParkingBYId:(parkingId)=>{
+
+      getParkingBYId: (parkingId) => {
         const parking = get().Parking.find((parking) => parking.id === parkingId);
         return parking;
       },
@@ -96,7 +100,7 @@ export const useStore = create(
 
 
       addBookingInfo: (info) => {
-        return set({ BookingInfo: {...get().BookingInfo,...info}});
+        return set({ BookingInfo: { ...get().BookingInfo, ...info } });
       },
 
       deleteBookingInfo: () => {
@@ -115,13 +119,13 @@ export const useStore = create(
             for (let i = 0; i < state.Parking.length; i++) {
               if (state.Parking[i].id == id) {
                 state.Parking[i].saved = true;
-                
+
                 state.SavedParking = [...state.SavedParking, state.Parking[i]];
                 state.SavedParkingIDS = [...state.SavedParkingIDS, id];
                 break;
               }
             }
-            
+
 
           }))
       },
