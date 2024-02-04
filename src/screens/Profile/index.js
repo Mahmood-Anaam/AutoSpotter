@@ -3,7 +3,6 @@ import { ScrollView, View, Text, StatusBar, Image } from "react-native";
 import styles from "./styles";
 import RBSheet from "react-native-raw-bottom-sheet";
 import AppBar from "../../components/AppBar";
-import { ASSETS } from "../../utilities/assets";
 import { SCREENS } from "../../utilities/constants";
 import ProfileItem from "../../components/ProfileItem";
 import AppButton from "../../components/AppButton";
@@ -11,14 +10,7 @@ import { COLORS } from "../../utilities/colors";
 import { getAuth } from "firebase/auth";
 import TextAvatar from "react-native-text-avatar";
 
-
-
 const ProfileScreen = ({ navigation }) => {
-  const user = getAuth().currentUser;
-  const email = user.email == null ? "" : user.email;
-  const name = user.displayName == null ? "" : user.displayName;
-  const phoneNumber = user.phoneNumber == null ? "" : user.phoneNumber;
-
   const refRBSheet = useRef();
 
   return (
@@ -28,16 +20,16 @@ const ProfileScreen = ({ navigation }) => {
       <AppBar title="Profile" rightIcon />
 
       <View style={styles.infoContainer}>
-        
         <TextAvatar
-
-          backgroundColor={'#33691e'}
-          textColor={'#d5e0d1'}
+          backgroundColor={"#33691e"}
+          textColor={"#d5e0d1"}
           size={140}
-          type={'circle'} // optional
-        >{name.toUpperCase()}</TextAvatar>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.email}>{phoneNumber}</Text>
+          type={"circle"} // optional
+        >
+          {getAuth().currentUser.displayName.toUpperCase()}
+        </TextAvatar>
+        <Text style={styles.name}>{getAuth().currentUser.displayName}</Text>
+        <Text style={styles.email}>{getAuth().currentUser.phoneNumber}</Text>
       </View>
 
       <ProfileItem
@@ -45,7 +37,8 @@ const ProfileScreen = ({ navigation }) => {
         leftIcon
         profile
         onPress={() => {
-          navigation.navigate(SCREENS.PROFILE_EDIT_SCREEN);
+          navigation.replace(SCREENS.PROFILE_EDIT_SCREEN);
+          
         }}
       />
 
@@ -103,9 +96,7 @@ const ProfileScreen = ({ navigation }) => {
         onPress={async () => {
           await getAuth().signOut();
           refRBSheet.current.open();
-
-        }
-        }
+        }}
       />
 
       <RBSheet
@@ -121,7 +112,6 @@ const ProfileScreen = ({ navigation }) => {
         <BMSHComponent
           onLogOutPress={async () => {
             refRBSheet.current.close();
-            // await AsyncStorage.removeItem(USER_TOKEN);
             navigation.replace(SCREENS.AUTH_STACK);
           }}
           onCancelPress={() => {

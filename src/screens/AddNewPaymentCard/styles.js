@@ -65,11 +65,13 @@ const styles = StyleSheet.create({
     borderRadius: WIDTH * 0.1,
     backgroundColor: COLORS.WHITE,
   
+  
   },
   listItemWrapperChecked: {
     borderWidth: 2,
     borderColor: COLORS.PRIMARY,
     backgroundColor: COLORS.LIGHT_BLUE_WHITE,
+    
   },
   expiryCvvWrapper: {
     flexDirection: "row",
@@ -82,6 +84,14 @@ const styles = StyleSheet.create({
   cvvInput: {
     flex: 1,
   },
+
+
+  continueButton: {
+    // marginTop: 0,
+    // marginBottom: VSPACING.s16,
+  },
+
+
 });
 
 export default styles;

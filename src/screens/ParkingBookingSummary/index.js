@@ -159,20 +159,11 @@ const ParkingBookingSummaryScreen = (props) => {
         )}
       />
 
-      {/* <View style={styles.cardContainer}>
-        <View style={styles.card}>
-          <Image source={ASSETS.masterCardImg} />
-          <Text style={styles.cardText}>•••• •••• •••• •••• 4679</Text>
-        </View>
-        <Pressable onPress={navigateToChangePaymentCard}>
-          <Text style={styles.changeText}>Change</Text>
-        </Pressable>
-      </View> */}
 
       <AppButton
-        title= "Payment Card"//"Confirm Payment"
+        title= "Payment Card"
         containerStyle={styles.buttonContainer}
-        onPress={navigateToChangePaymentCard}   //{showModal}
+        onPress={navigateToChangePaymentCard}   
       />
 
 

@@ -50,9 +50,10 @@ const styles = StyleSheet.create({
   titleStyle: {
     color: COLORS.PRIMARY,
   },
+
   continueButton: {
-    marginTop: HEIGHT * 0.15,
-    marginBottom: VSPACING.s16,
+    marginTop: HEIGHT*0.1,
+    // marginBottom: VSPACING.s16,
   },
   textContainer: {
     paddingTop: VSPACING.s16,

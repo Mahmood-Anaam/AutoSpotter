@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.s14,
     backgroundColor: "#FAFAFA",
     borderRadius: SPACING.s10,
-    marginBottom: SPACING.s24,
+    marginBottom: SPACING.s20,
   },
   input: {
     flex: 1,

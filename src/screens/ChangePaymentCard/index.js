@@ -123,7 +123,6 @@ const ChangePaymentCardScreen = (props) => {
           addSvg
           GradientColors={COLORS.GRADIENT3}
           titleStyle={styles.titleStyle}
-          containerStyle={styles.continueButton}
           onPress={() => {
             navigation.navigate(SCREENS.ADD_NEW_Card_SCREEN);
           }}

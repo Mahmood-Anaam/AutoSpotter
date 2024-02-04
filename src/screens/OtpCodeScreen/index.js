@@ -9,6 +9,9 @@ import AppButton from "../../components/AppButton";
 import { SCREENS } from "../../utilities/constants";
 import Toast from "react-native-simple-toast";
 import { updateProfile } from "firebase/auth";
+import { db } from "../../repositorys/firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
+import { COLLECTIONS_REFS } from "../../utilities/constants";
 
 const OtpCodeScreen = ({ route, navigation }) => {
 
@@ -25,11 +28,17 @@ const OtpCodeScreen = ({ route, navigation }) => {
 
 
       if (userCredential != null) {
-        if (fullName != null) {
+        
           await updateProfile(userCredential.user, {
-            displayName: fullName
+            displayName: fullName==null?" ":fullName
           });
-        }
+        
+
+        await setDoc(doc(db, COLLECTIONS_REFS.USERS, userCredential.user.uid), {
+          "fullName": fullName,
+          "phoneNumber":userCredential.user.phoneNumber
+        });
+
         navigation.replace(SCREENS.BOTTOM_NAVIGATOR);
       }
 

@@ -219,7 +219,10 @@ const AddNewPaymentCardScreen = () => {
           />
         </View>
 
-        <AppButton title="Add New Card" onPress={handleOnAddCardPress} />
+        <AppButton 
+        title="Add New Card" 
+        containerStyle={[styles.continueButton]} 
+        onPress={handleOnAddCardPress} />
       </View>
     </ScrollView>
   );

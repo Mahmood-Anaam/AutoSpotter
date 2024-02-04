@@ -15,10 +15,18 @@ const styles = StyleSheet.create({
   containerStyle: {
     marginBottom: VSPACING.s20,
   },
+
   text: {
     color: COLORS.BLACK,
     fontSize: normalizeFontSize(20),
     fontFamily: FONTS.SEMI_BOLD,
+  },
+
+  label: {
+    color: COLORS.BLACK,
+    fontSize: normalizeFontSize(16),
+    fontFamily: FONTS.SEMI_BOLD,
+    marginVertical:VSPACING.s10,
   },
   inputContainerStyle: {
     paddingHorizontal: SPACING.s10,
@@ -26,6 +34,14 @@ const styles = StyleSheet.create({
   inputStyle: {
     marginLeft: SPACING.s10,
   },
+
+  lottieStyle: {
+    height: VSPACING.s30*3,
+    marginTop:"auto",
+    marginBottom:"auto",
+    alignSelf: "center",
+  },
+
 });
 
 export default styles;
