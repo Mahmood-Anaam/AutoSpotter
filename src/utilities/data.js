@@ -1210,11 +1210,7 @@ export const ParkingStates = [
     title: "Completed",
     checked: "Completed",
   },
-  {
-    id: 3,
-    title: "Cancelled",
-    checked: "Cancelled",
-  },
+
 ];
 
 

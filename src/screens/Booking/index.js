@@ -6,87 +6,131 @@ import {
   View,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles";
 import AppBar from "../../components/AppBar";
 import { useNavigation } from "@react-navigation/native";
 import { ParkingStates } from "../../utilities/data";
 import { ASSETS } from "../../utilities/assets";
 import AppButton from "../../components/AppButton";
+import { useStore } from "../../store/store";
+import LottieView from "lottie-react-native";
+import Toast from "react-native-simple-toast";
+import { loadParkingBookings } from "../../repositorys/firestoreRepository";
+import { SCREENS } from "../../utilities/constants";
+
 
 const BookingScreen = () => {
   const navigation = useNavigation();
   const [isChecked, setIsChecked] = React.useState("Ongoing");
+
+  const [isLoading, setIsLoading] = useState(true);
+  const setParkingBookings = useStore((state) => state.setParkingBookings);
+
+  const getParkingBookingsByStatus = useStore(
+    (state) => state.getParkingBookingsByStatus
+  );
+
+  useEffect(() => {
+    async function fetch() {
+      await loadParkingBookings().then((respons) => {
+        const { ParkingBookings, error } = respons;
+        if (error === "") {
+          setParkingBookings(ParkingBookings);
+        } else {
+          console.log(error);
+          Toast.show(
+            "Error getting parking bookings data from firebase: (" +
+              error +
+              ")",
+            Toast.CENTER
+          );
+        }
+      });
+
+      setIsLoading(false);
+    }
+
+    fetch();
+  }, [isLoading]);
+
+
+  const onViewTicketHandler = () => {
+    console.log("pressss");
+    navigation.navigate(SCREENS.PARKING_TICKET_SCREEN, {booking});
+  };
+
+
+
+
+
+
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} scrollEnabled={false}>
       <AppBar
         title="My Parking Bookings"
         leftIcon
         onLeftIconPress={() => {
           navigation.goBack();
+          
         }}
         containerStyle={styles.containerStyle}
       />
 
-      <FlatList
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        data={ParkingStates}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => {
-          const { title, checked } = item;
-          return (
-            <FlootItem
-              onPress={() => setIsChecked(checked)}
-              title={title}
-              checked={checked === isChecked}
-            />
-          );
-        }}
-      />
-
-      {isChecked === "Ongoing" && (
-        <>
-          <ParkingBookingItem
-            title="Ongoing Bookings"
-            address="Address"
-            cost="4.8"
-            timer="5"
-            ongoing
-            nowActive
-            imageUrl={ASSETS.ParkingImg}
+      {!isLoading && (
+        <View>
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={ParkingStates}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => {
+              const { title, checked } = item;
+              return (
+                <FlootItem
+                  onPress={() => setIsChecked(checked)}
+                  title={title}
+                  checked={checked === isChecked}
+                />
+              );
+            }}
           />
-          <ParkingBookingItem
-            title="Ongoing Bookings"
-            address="Address"
-            cost="4.8"
-            timer="5"
-            ongoing
-            paid
-            imageUrl={ASSETS.ParkingImg}
-          />
-        </>
+        </View>
       )}
 
-      {isChecked === "Completed" && (
-        <ParkingBookingItem
-          title="Completed Bookings"
-          address="Address"
-          cost="4.8"
-          timer="5"
-          completed
-          imageUrl={ASSETS.ParkingImg}
-        />
+      {!isLoading && (
+        <View>
+          <FlatList
+            scrollEnabled={false}
+            nestedScrollEnabled={true}
+            data={
+              isChecked === "Ongoing"
+                ? getParkingBookingsByStatus("unavailable")
+                : getParkingBookingsByStatus("complete")
+            }
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => {
+              return (
+                <ParkingBookingItem
+                  booking={item}
+                  isOngoing={isChecked === "Ongoing"}
+                  onViewTicketHandler={()=>{
+                    navigation.navigate(SCREENS.PARKING_TICKET_SCREEN,{booking:item});
+                  }}
+                />
+              );
+            }}
+          />
+        </View>
       )}
 
-      {isChecked === "Cancelled" && (
-        <ParkingBookingItem
-          title="Cancelled Bookings"
-          address="Address"
-          cost="4.8"
-          timer="5"
-          cancelled
-          imageUrl={ASSETS.ParkingImg}
+      {isLoading && (
+        <LottieView
+          CENTER={true}
+          source={ASSETS.loading}
+          style={styles.lottieStyle}
+          autoPlay
+          loop
         />
       )}
     </ScrollView>
@@ -111,86 +155,48 @@ const FlootItem = (props) => {
 };
 
 const ParkingBookingItem = (props) => {
-  const {
-    title,
-    address,
-    cost,
-    timer,
-    imageUrl,
-    nowActive,
-    paid,
-    ongoing,
-    completed,
-    cancelled,
-  } = props;
+  const { booking, isOngoing,onViewTicketHandler } = props;
+
+  const parking = useStore((state) => state.getParkingBYId)(booking.parkingId);
+
+
+
   return (
     <View style={styles.itemContainer}>
-      <View
-        style={[
-          styles.imageTitleContainer,
-          cancelled && styles.cancelledWrapper,
-        ]}
-      >
-        <Image source={{ uri: imageUrl }} style={styles.image} />
+      <View style={[styles.imageTitleContainer, styles.cancelledWrapper]}>
+        <Image source={{ uri: parking.imageUrl }} style={styles.image} />
 
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title}>{parking.name}</Text>
 
-          <Text style={styles.address}>{address}</Text>
+          <Text style={styles.address}>{parking.address}</Text>
 
           <View style={styles.costContainer}>
-            <Text style={[styles.title, styles.cost]}>${cost}</Text>
+            <Text style={[styles.title, styles.cost]}>SAR {parking.cost}</Text>
 
-            <Text style={styles.timer}>/{timer} hour</Text>
-
-            <View
-              style={[
-                styles.statusContainer,
-                paid && styles.paidContainer,
-                cancelled && styles.cancelledContainer,
-                completed && styles.completedContainer,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.status,
-                  paid && styles.paidText,
-                  cancelled && styles.cancelledText,
-                  completed && styles.completedText,
-                ]}
-              >
-                {nowActive
-                  ? "Now Active"
-                  : completed
-                  ? "Completed"
-                  : cancelled
-                  ? "Cacelled"
-                  : "Paid"}
-              </Text>
-            </View>
+            <Text style={styles.timer}>/{booking.duration} hour</Text>
           </View>
         </View>
       </View>
 
-      {ongoing && (
+      {isOngoing && (
         <View style={styles.buttonWrapper}>
-          <View style={styles.buttonContainer}>
-            <Text style={styles.buttonText}>
-              {nowActive ? "View Timer" : "Cancel Booking"}
-            </Text>
-          </View>
           <AppButton
             title="View Ticket"
             containerStyle={styles.button}
             linearGradientStyle={styles.button}
+            onPress={()=>onViewTicketHandler()}
           />
         </View>
       )}
 
-      {completed && (
-        <View style={[styles.buttonContainer, styles.completedButtonContainer]}>
+      {!isOngoing && (
+        <Pressable
+          style={[styles.buttonContainer, styles.completedButtonContainer]}
+          onPress={()=>onViewTicketHandler()}
+        >
           <Text style={styles.buttonText}>View Ticket</Text>
-        </View>
+        </Pressable>
       )}
     </View>
   );

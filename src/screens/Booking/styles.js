@@ -147,6 +147,14 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.BOLD,
     color: COLORS.PRIMARY,
   },
+
+  lottieStyle: {
+    height: VSPACING.s30*3,
+    marginTop:"auto",
+    marginBottom:"auto",
+    alignSelf: "center",
+  },
+
 });
 
 export default styles;

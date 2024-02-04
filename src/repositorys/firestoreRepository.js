@@ -1,7 +1,43 @@
 
 import { db } from "./firebaseConfig";
-import { collection, orderBy, query, getDocs } from "firebase/firestore";
+import { collection, orderBy, query, getDocs,where } from "firebase/firestore";
 import { COLLECTIONS_REFS } from "../utilities/constants";
+import { getAuth } from "firebase/auth";
+
+
+export const loadParkingBookings = async () => {
+    
+    
+
+    let ParkingBookings = [];
+    let error = "";
+    const user = getAuth().currentUser;
+    if(user==null){
+        error = "error user not registered";
+        return {ParkingBookings, error }
+    }
+    try {
+        const q = query(collection(db, COLLECTIONS_REFS.BOOKINGS),where("userId", "==", user.uid));
+        const querySnapshot = await getDocs(q);
+        ParkingBookings = querySnapshot.docs.map((doc) => {
+            return {
+                ...doc.data(),
+                id: doc.id,
+
+            };
+        });
+
+        return { ParkingBookings, error };
+
+    } catch (e) {
+        error = e;
+        return { ParkingBookings, error };
+    }
+
+
+
+}
+
 
 
 

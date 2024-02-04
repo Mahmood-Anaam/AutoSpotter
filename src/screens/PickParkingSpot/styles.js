@@ -112,12 +112,6 @@ const styles = StyleSheet.create({
     marginBottom:"auto",
     textAlign: "center",
 
-  
-   
-   
-    
-
-  
   },
 
   

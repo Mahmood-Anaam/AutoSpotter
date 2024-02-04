@@ -10,13 +10,40 @@ import { getAuth } from "firebase/auth";
 import { useStore } from "../../store/store";
 
 const ParkingTicketScreen = (props) => {
+  
   const navigation = useNavigation();
   const user = getAuth().currentUser;
   const name = user.displayName == null ? "" : user.displayName;
   const phoneNumber = user.phoneNumber == null ? "" : user.phoneNumber;
-  const BookingInfo = useStore((state) => state.BookingInfo);
+  
 
-  const { summary, pricingSummary } = props.route.params;
+  const { booking } = props.route.params;
+  const parking = useStore((state) => state.getParkingBYId)(booking.parkingId);
+  const gate = useStore((state) => state.getGateBYId)(booking.gateId);
+
+  const bookStartDateTime = new Date(booking.startDate);
+  const bookEndDateTime = new Date(booking.endDate);
+
+
+  const bookStartDateTimeFormat = bookStartDateTime.toLocaleTimeString("en-GB", {
+    hour12: true,
+    hour: "numeric",
+    minute: "numeric",
+    month: "numeric",
+    day: "numeric",
+    year: "numeric"
+  }).replaceAll("/", "-");
+
+
+  const bookEndDateTimeFormat = bookEndDateTime.toLocaleTimeString("en-GB", {
+    hour12: true,
+    hour: "numeric",
+    minute: "numeric",
+    month: "numeric",
+    day: "numeric",
+    year: "numeric"
+  }).replaceAll("/", "-");
+
 
   const infoData = [
     {
@@ -28,24 +55,24 @@ const ParkingTicketScreen = (props) => {
     },
     {
       id: 2,
-      title1: summary[0]["title"],
-      title2: summary[1]["title"],
-      value1: summary[0]["value"],
-      value2: summary[1]["value"],
+      title1: "Parking Area",
+      title2: "Address",
+      value1: parking.name,
+      value2: parking.address,
     },
     {
       id: 3,
-      title1: summary[2]["title"],
-      title2: summary[3]["title"],
-      value1: summary[2]["value"],
-      value2: summary[3]["value"],
+      title1: "Gate",
+      title2: "Parking Spot",
+      value1: gate.name,
+      value2: `${booking.spotName} `
     },
     {
       id: 4,
-      title1: summary[4]["title"],
-      title2: summary[5]["title"],
-      value1: summary[4]["value"],
-      value2: summary[5]["value"],
+      title1: "Start Date",
+      title2: "End Date",
+      value1: bookStartDateTimeFormat,
+      value2: bookEndDateTimeFormat,
     },
   
   ];
@@ -67,7 +94,7 @@ const ParkingTicketScreen = (props) => {
           Scan this on the scanner machine when you are in the parking lot
         </Text>
 
-        <QRCode value={BookingInfo.docId} size={180} />
+        <QRCode value={booking.id} size={180} />
 
         <FlatList
           data={infoData}
@@ -79,12 +106,7 @@ const ParkingTicketScreen = (props) => {
         />
       </View>
 
-      <AppButton
-        title="Go back to Parking Home"
-        onPress={() => {
-          navigation.replace(SCREENS.HOME_SCREEN);
-        }}
-      />
+
     </View>
   );
 };

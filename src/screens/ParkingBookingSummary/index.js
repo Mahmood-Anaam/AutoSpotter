@@ -17,7 +17,7 @@ const ParkingBookingSummaryScreen = (props) => {
 
   const { spot } = props.route.params;
   const navigation = useNavigation();
-  const { startDate, endDate } = useStore((state) => state.BookingInfo);
+  const { startDate, endDate,duration,costTotal } = useStore((state) => state.BookingInfo);
 
   const floor = useStore((state) => state.getFloorBYId)(spot.floorId);
   const gate = useStore((state) => state.getGateBYId)(floor.gateId);
@@ -27,7 +27,7 @@ const ParkingBookingSummaryScreen = (props) => {
 
   const bookStartDateTime = new Date(startDate);
   const bookEndDateTime = new Date(endDate);
-  const duration = ((((endDate - startDate) / 1000) / 60) / 60);
+
 
   const bookStartDateTimeFormat = bookStartDateTime.toLocaleTimeString("en-GB", {
     hour12: true,
@@ -48,8 +48,8 @@ const ParkingBookingSummaryScreen = (props) => {
     year: "numeric"
   }).replaceAll("/", "-");
 
-  const taxes = (parking.cost * duration * 10) / 100;
-  const totalCost = parking.cost * duration + taxes;
+
+
 
 
   const summary = [
@@ -100,29 +100,19 @@ const ParkingBookingSummaryScreen = (props) => {
     },
     {
       id: 3,
-      title: "Cost Without Taxes",
-      value: `${parking.cost * duration} SAR`,
-    },
-    {
-      id: 4,
-      title: "Taxes & Fees (10%)",
-      value: `${taxes} SAR`,
-    },
-    {
-      id: 5,
       title: "Total Cost",
-      value: `${totalCost} SAR`,
+      value: `${costTotal} SAR`,
     },
+    
+ 
   ];
 
 
 
   const navigateToChangePaymentCard = () => {
-    navigation.navigate(SCREENS.CHANGE_PAYMENT_METHOD_SCREEN, {
-      summary,
-      pricingSummary,
-    });
+    navigation.navigate(SCREENS.CHANGE_PAYMENT_METHOD_SCREEN);
   };
+
 
 
 

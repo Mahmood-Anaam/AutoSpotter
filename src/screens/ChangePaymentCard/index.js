@@ -23,9 +23,8 @@ import { BookingSpot } from "../../repositorys/APIRepository";
 import Toast from "react-native-simple-toast";
 import LottieView from "lottie-react-native";
 
-const ChangePaymentCardScreen = (props) => {
+const ChangePaymentCardScreen = () => {
   const navigation = useNavigation();
-  const { summary, pricingSummary } = props.route.params;
   const PaymentMethodsUser = useStore((state) => state.PaymentMethodsUser);
   const [isChecked, setIsChecked] = useState(
     PaymentMethodsUser.length > 0 ? PaymentMethodsUser[0] : ""
@@ -40,10 +39,8 @@ const ChangePaymentCardScreen = (props) => {
   const [isLoading, setIsLoading] = useState(null);
 
   const navigateToViewParkingTicketScreen = () => {
-    navigation.navigate(SCREENS.PARKING_TICKET_SCREEN, {
-      summary,
-      pricingSummary,
-    });
+    const booking = getBookingInfo();
+    navigation.navigate(SCREENS.PARKING_TICKET_SCREEN, {booking});
     hideModal();
   };
 
@@ -59,6 +56,7 @@ const ChangePaymentCardScreen = (props) => {
       validThru: card.validThru,
       cardHolderName: card.cardHolderName,
       type: card.checked,
+      
     });
 
     const { docId, msg } = await BookingSpot(getBookingInfo());
@@ -66,7 +64,7 @@ const ChangePaymentCardScreen = (props) => {
     setIsLoading(false);
 
     if (docId != null) {
-      addBookingInfo({ docId });
+      addBookingInfo({ id:docId });
       showModal();
     } else {
       Toast.show(msg, Toast.LONG);

@@ -28,6 +28,7 @@ const HomeScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isFetching, setIsFetching] = useState(true);
 
+  
   const setParking = useStore((state) => state.setParking);
   const setGates = useStore((state) => state.setGates);
   const setFloors = useStore((state) => state.setFloors);
@@ -48,6 +49,7 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     async function fetch() {
+
       await loadParking().then((respons) => {
         const { parking, error } = respons;
         if (error === "") {

@@ -3,12 +3,9 @@ import { produce } from "immer";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-
 export const useStore = create(
   persist(
     (set, get) => ({
-
       Parking: [],
       SavedParking: [],
       SavedParkingIDS: [],
@@ -16,57 +13,76 @@ export const useStore = create(
       Floors: [],
       BookingInfo: {},
       PaymentMethodsUser: [],
+      ParkingBookings: [],
       FavoritesList: [],
+
+      
+      setParkingBookings: (docs) => {
+        const data = docs.map((doc) => {
+          return {
+            ...doc,
+            currency: "SAR ",
+          };
+        });
+
+        return set({ ParkingBookings: data });
+      },
+
+
+      getParkingBookingsByStatus: (status) => {
+        const books = get().ParkingBookings.filter(
+          (book) => book.status === status
+        );
+        return books;
+      },
+
+
 
 
 
       getBookingInfo: () => {
-        return {...get().BookingInfo};
+        return { ...get().BookingInfo };
       },
 
       addToPaymentMethodsUser: (card) => {
-
         return set(
           produce((state) => {
-
-            state.PaymentMethodsUser = [...state.PaymentMethodsUser, { ...card }];
-
-
-          }))
+            state.PaymentMethodsUser = [
+              ...state.PaymentMethodsUser,
+              { ...card },
+            ];
+          })
+        );
       },
-
-
-
 
       setParking: (docs) => {
         const data = docs.map((doc) => {
           return {
             ...doc,
-            saved: get().SavedParkingIDS.filter(element => element === doc.id).length > 0,
-            currency: "SAR "
-          }
+            saved:
+              get().SavedParkingIDS.filter((element) => element === doc.id)
+                .length > 0,
+            currency: "SAR ",
+          };
         });
 
         return set({ Parking: data });
       },
 
-
       setSavedParking: (docs) => {
         return set({ SavedParking: docs });
       },
-
 
       setGates: (docs) => {
         return set({ Gates: docs });
       },
 
-
       getGatesByParkingId: (parkingId) => {
-        const gates = get().Gates.filter((gate) => gate.parkingId === parkingId);
+        const gates = get().Gates.filter(
+          (gate) => gate.parkingId === parkingId
+        );
         return gates;
-
       },
-
 
       setFloors: (docs) => {
         return set({ Floors: docs });
@@ -76,7 +92,6 @@ export const useStore = create(
         const floors = get().Floors.filter((floor) => floor.gateId === gateId);
         return floors;
       },
-
 
       getFloorBYId: (floorId) => {
         const floor = get().Floors.find((floor) => floor.id === floorId);
@@ -88,16 +103,16 @@ export const useStore = create(
         return gate;
       },
 
-
       getParkingBYId: (parkingId) => {
-        const parking = get().Parking.find((parking) => parking.id === parkingId);
+        const parking = get().Parking.find(
+          (parking) => parking.id === parkingId
+        );
         return parking;
       },
 
       setBookingInfo: (info) => {
         return set({ BookingInfo: info });
       },
-
 
       addBookingInfo: (info) => {
         return set({ BookingInfo: { ...get().BookingInfo, ...info } });
@@ -107,15 +122,9 @@ export const useStore = create(
         return set({ BookingInfo: {} });
       },
 
-
-
-
       addToSavedParkingIDS: (id) => {
-
         return set(
           produce((state) => {
-
-
             for (let i = 0; i < state.Parking.length; i++) {
               if (state.Parking[i].id == id) {
                 state.Parking[i].saved = true;
@@ -125,16 +134,11 @@ export const useStore = create(
                 break;
               }
             }
-
-
-          }))
+          })
+        );
       },
 
-
-
-
       deleteFromSavedParkingIDS: (id) => {
-
         return set(
           produce((state) => {
             let index = state.SavedParkingIDS.findIndex((elm) => elm === id);
@@ -147,12 +151,9 @@ export const useStore = create(
                 break;
               }
             }
-
-          }
-          ))
+          })
+        );
       },
-
-
     }),
     {
       name: "parking-app",

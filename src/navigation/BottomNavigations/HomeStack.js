@@ -37,16 +37,7 @@ const HomeStack = () => {
         }}
       />
 
-      <Stack.Screen
-        name={SCREENS.CHOOSE_FLOOR_SCREEN}
-        component={ChooseFloorScreen}
-        options={{
-          header: () => { },
-          headerStyle: {
-            height: 0,
-          },
-        }}
-      />
+     
 
       <Stack.Screen
         name={SCREENS.PICK_PARKING_SPOT_SCREEN}

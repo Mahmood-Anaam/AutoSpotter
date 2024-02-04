@@ -58,7 +58,7 @@ const PickParkingSpotScreen = (props) => {
     if (checkedSpot === "") {
       Toast.show("Pls select a spot.", Toast.LONG);
     } else {
-      addBookingInfo({spotId: checkedSpot.id});
+      addBookingInfo({spotId: checkedSpot.id,spotName:checkedSpot.name});
       navigation.navigate(SCREENS.PARKING_BOOKING_SUMMARY_SCREEN,{spot:checkedSpot});
 
 

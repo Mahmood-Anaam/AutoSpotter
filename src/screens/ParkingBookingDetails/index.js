@@ -48,6 +48,10 @@ const ParkingBookingDetailsScreen = (props) => {
       addBookingInfo({
         startDate: bookStartDateTime.getTime(),
         endDate: bookEndDateTime.getTime(),
+        duration:duration,
+        costTotal:costTotal,
+        parkingId:parkingId,
+        gateId:gateId
       });
 
 
